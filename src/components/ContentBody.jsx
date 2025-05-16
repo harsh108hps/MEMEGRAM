@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import RegisterModal from "./RegisterModal";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import MemeOfTheDay from "./MemeOfTheDay";
 
 const ContentBody = () => {
   const navigate = useNavigate();
@@ -51,6 +52,7 @@ const ContentBody = () => {
           </Link>
         </div>
       </section>
+      
 
       {/* Feature Highlights */}
       <section className="py-16 px-6 max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
@@ -92,6 +94,7 @@ const ContentBody = () => {
           </div>
         </div>
       </section>
+      <MemeOfTheDay />
 
       {/* Call to Action */}
       <section className="bg-pink-600 text-white py-12 text-center">
