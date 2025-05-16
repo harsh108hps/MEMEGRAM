@@ -36,49 +36,57 @@ const CreateMeme = () => {
   };
 
   const handleGenerateCaption = () => {
-    const captions = [
+    const tagKeywordMap = {
+      coding: [
+        "Works in dev, breaks in prod. Classic.",
+        "Fix one bug, create three new ones. Software development, baby!",
+        "Git commit -m 'final_final_v3_actually_final'",
+        "Me coding vs AI writing the same code in 5 seconds.",
+        "When the code compiles, but deep down you know it shouldn't.",
+      ],
+      funny: [
+        "That one 'k' text ruining your whole week.",
+        "Cooking is fun… until it’s time to wash dishes.",
+        "Fitness tip: If you eat fast enough, the calories can’t catch you.",
+        "Dog logic: bark first, think later.",
+        "Me: I’ll eat clean today. Also me: orders 3 pizzas",
+      ],
+      cat: [
+        "My cat judging me like it pays rent.",
+        "Pet: Sleeps all day. Me: Jealous.",
+        "This cat’s side-eye has me rethinking my life.",
+        "Me: Come cuddle. Cat: How about never?",
+      ],
+      dog: [
+        "Talking to my dog like it understands taxes.",
+        "Dog logic: bark first, think later.",
+        "My dog’s zoomies could power a small city.",
+        "Pet me or face the consequences.",
+      ],
+      sleep: [
+        "Sleep schedule? Never heard of her.",
+        "Alarms are just spicy lullabies.",
+        "Me: Finally relaxed. Brain: Time to panic.",
+        "One more episode. One more regret.",
+      ],
+    };
+
+    const defaultCaptions = [
       "When the code finally works...",
       "Me waiting for the weekend like...",
-      "This is peak performance 😂",
       "Life before coffee vs after ☕",
-      "Debugging: 90% staring, 10% fixing",
-      "When you realize it's Monday tomorrow...",
-      "Did I lock the door? Did I say something weird 5 years ago?",
-      "That one 'k' text ruining your whole week.",
-      "Social battery: 0%. Awkward smile: 100%.",
-      "Anxiety said, 'Surprise!' and now I'm crying in the club.",
-      "Me: Finally relaxed. Brain: Time to panic.",
-      "Cooking is fun… until it’s time to wash dishes.",
-      "Me: I’ll eat clean today. Also me: orders 3 pizzas",
-      "Fitness tip: If you eat fast enough, the calories can’t catch you.",
-      "Fridge: empty. Mood: ruined.",
-      "That bite of food hitting just right… tears in my eyes.",
-      "Me at 3am: Time to rewatch my whole life.",
-      "One more episode. One more regret.",
-      "Alarms are just spicy lullabies.",
-      "Procrastinators unite… tomorrow.",
-      "Sleep schedule? Never heard of her.",
-      "Dog logic: bark first, think later.",
-      "My cat judging me like it pays rent.",
-      "Pet: Sleeps all day. Me: Jealous.",
-      "Talking to my dog like it understands taxes.",
-      "Works in dev, breaks in prod. Classic.",
-      "When the code finally runs, but you have no idea why.",
-      "Fix one bug, create three new ones. Software development, baby!",
       "That feeling when your console.log solves more than Stack Overflow.",
-      "Git commit -m 'final_final_v3_actually_final'",
-      "99 bugs in the code. Take one down, patch it around... 127 bugs in the code.",
-      "Me: It’s just a small CSS change. Also me: Why is the entire layout broken?",
-      "Debugging: when you stare at your code long enough to doubt reality.",
-      "Programmer's prayer: Please don’t let it be a semicolon.",
-      "When the code compiles, but deep down you know it shouldn't.",
-      "Me coding vs AI writing the same code in 5 seconds.",
-      "AI wrote it. I just copied, pasted, and prayed.",
-      "When you use ChatGPT to debug, but it roasts your code instead.",
-      "Learning code in 2025: 20% syntax, 80% asking AI what went wrong.",
-      "Why learn recursion when AI already understands it better than I ever will?",
+      "Procrastinators unite… tomorrow.",
     ];
-    const random = captions[Math.floor(Math.random() * captions.length)];
+    const tags = tagsInput
+      .toLowerCase()
+      .split(",")
+      .map((tag) => tag.replace(/^#/, "").trim())
+      .filter(Boolean);
+    const matchedCaptions = tags.flatMap((tag) => tagKeywordMap[tag] || []);
+    const captionPool =
+      matchedCaptions.length > 0 ? matchedCaptions : defaultCaptions;
+    const random = captionPool[Math.floor(Math.random() * captionPool.length)];
     setSuggestedCaption(random);
   };
 
