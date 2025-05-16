@@ -9,7 +9,7 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Feed from "./pages/Feed";
 import CreateMeme from "./pages/CreateMeme";
-import LeaderBoard from "./pages/LeaderBoard";
+import LeaderBoard from "./pages/Leaderboard";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
