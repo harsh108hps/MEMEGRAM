@@ -22,7 +22,7 @@ const ContentBody = () => {
     if (user) {
       navigate("/create");
     } else {
-      toast.warning("Please sign up or log in to create memes.");
+      toast.warning("Please log in to create a meme.");
     }
   };
   return (
