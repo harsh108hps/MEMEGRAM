@@ -18,3 +18,26 @@ html {
   scrollbar-color: #e53888 #1f2937;
   scrollbar-width: thin;
 }
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%) translateX(100%);
+  }
+  100% {
+    transform: translateY(-100%) translateX(100%);
+  }
+}
+
+.animate-slide {
+  animation: slideUp linear infinite;
+}
+
+.animate-run {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  pointer-events: none; /* Prevents emojis from interfering with other UI elements */
+}
