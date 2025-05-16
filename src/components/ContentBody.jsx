@@ -1,7 +1,20 @@
 import { Link } from 'react-router-dom';
 import { Sparkles, Flame, Laugh, Trophy } from 'lucide-react';
+import { useState } from 'react';
+import {useAuth} from "../contexts/AuthContext"
+import RegisterModal from './RegisterModal';
 
 const ContentBody = () => {
+    const {user}=useAuth()
+      const [showRegisterModal, setShowRegisterModal] = useState(false); // Modal visibility state
+
+  const handleSignUp = () => {
+    setShowRegisterModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowRegisterModal(false);
+  };
   return (
     <main className="text-gray-800">
       {/* Hero Section */}
@@ -50,10 +63,11 @@ const ContentBody = () => {
       <section className="bg-pink-600 text-white py-12 text-center">
         <h2 className="text-2xl font-bold">Ready to Become a Meme Legend?</h2>
         <p className="mt-2">Join MEMEGRAM and let your creativity go viral.</p>
-        <Link to="/signup" className="mt-4 inline-block bg-white text-pink-600 px-6 py-3 rounded-full hover:bg-gray-100">
+        <button onClick={handleSignUp} className="mt-4 inline-block bg-white text-pink-600 px-6 py-3 rounded-full hover:bg-gray-100">
           Sign Up Now
-        </Link>
+        </button>
       </section>
+       {showRegisterModal && <RegisterModal onClose={handleCloseModal} />}
     </main>
   );
 };
