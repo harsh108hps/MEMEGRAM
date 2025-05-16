@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import Feed from "./pages/Feed";
 import CreateMeme from "./pages/CreateMeme";
 import Dashboard from "./pages/Dashboard";
+import LeaderBoard from "./pages/LeaderBoard"
 
 function App() {
   return (
