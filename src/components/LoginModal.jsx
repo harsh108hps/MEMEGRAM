@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { auth } from "../../firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-const LoginModal = ({ onClose }) => {
+const LoginModal = ({ onClose, onSwitchToRegister }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  // const [showRegister, setshowRegister] = useState(false);
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -34,7 +35,7 @@ const LoginModal = ({ onClose }) => {
 
         {/* Heading */}
         <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-          Login to MemeHub
+          Login to MemeGram
         </h2>
 
         {/* Error */}
@@ -64,11 +65,24 @@ const LoginModal = ({ onClose }) => {
 
           <button
             type="submit"
-            className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded text-sm font-semibold"
+            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded text-sm font-semibold"
           >
-            Sign In
+            {loading ? "Loading..." : "Login"}
           </button>
         </form>
+        {/* Register link */}
+        <p className="text-sm text-center mt-4 text-gray-600">
+          Don’t have an account?{" "}
+          <button
+            onClick={() => {
+              onSwitchToRegister();
+              onClose();
+            }}
+            className="text-teal-500 hover:underline"
+          >
+            Register
+          </button>
+        </p>
       </div>
     </div>
   );

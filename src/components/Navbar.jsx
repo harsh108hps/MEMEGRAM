@@ -4,13 +4,17 @@ import { signOut } from "firebase/auth";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import LoginModal from "./LoginModal";
 import { auth } from "../../firebase-config";
-const Navbar = ({ user }) => {
+import RegisterModal from "./RegisterModal";
+import { useAuth } from "../contexts/AuthContext";
+const Navbar = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const handleLogout = async () => {
     await signOut(auth);
-    navigate("/login");
+    navigate("/");
   };
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -21,28 +25,31 @@ const Navbar = ({ user }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex-shrink-0 text-xl font-bold text-teal-400">
-              <Link to="/">🧠 MemeHub</Link>
+            <div className="flex-shrink-0 text-xl font-bold text-pink-500">
+              <Link to="/">🧠 MemeGram</Link>
             </div>
 
             {/* Desktop Links */}
             <div className="hidden md:flex space-x-6">
-              <Link to="/feed" className="hover:text-teal-300 transition">
+              <Link to="/feed" className="hover:text-pink-500 transition">
                 Feed
               </Link>
-              <Link to="/create" className="hover:text-teal-300 transition">
-                Create
-              </Link>
+
               <Link
                 to="/leaderboard"
-                className="hover:text-teal-300 transition"
+                className="hover:text-pink-500 transition"
               >
                 Leaderboard
               </Link>
               {user && (
+                <Link to="/create" className="hover:text-pink-500 transition">
+                  Create
+                </Link>
+              )}
+              {user && (
                 <Link
                   to="/dashboard"
-                  className="hover:text-teal-300 transition"
+                  className="hover:text-pink-500 transition"
                 >
                   Dashboard
                 </Link>
@@ -76,7 +83,7 @@ const Navbar = ({ user }) => {
               ) : (
                 <button
                   onClick={() => setShowLogin(true)}
-                  className="bg-teal-400 hover:bg-teal-500 text-black px-3 py-1 rounded text-sm"
+                  className="bg-pink-500 hover:bg-pink-600 text-black px-3 py-1 rounded text-sm"
                 >
                   Login
                 </button>
@@ -128,7 +135,7 @@ const Navbar = ({ user }) => {
                   Logout
                 </button>
               ) : (
-                <Link
+                <button
                   to="/login"
                   onClick={() => {
                     setShowLogin(true);
@@ -137,13 +144,22 @@ const Navbar = ({ user }) => {
                   className="text-left text-teal-400"
                 >
                   Login
-                </Link>
+                </button>
               )}
             </div>
           )}
         </div>
       </nav>
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+      {showLogin && (
+        <LoginModal
+          onClose={() => setShowLogin(false)}
+          onSwitchToRegister={() => {
+            setShowLogin(false);
+            setShowRegister(true);
+          }}
+        />
+      )}
+      {showRegister && <RegisterModal onClose={() => setShowRegister(false)} />}
     </>
   );
 };

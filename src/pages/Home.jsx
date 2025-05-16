@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
+import ContentBody from "../components/ContentBody";
 
 const Home = () => {
   return (
-    <div>
-      <h1>HOME PAGE</h1>
-    </div>
-  )
-}
+    <>
+      <ContentBody />
+    </>
+  );
+};
 
-export default Home
+export default Home;

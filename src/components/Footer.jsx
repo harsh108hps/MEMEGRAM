@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Instagram, Twitter, Youtube } from "lucide-react";
-
+import { useAuth } from "../contexts/AuthContext";
 const Footer = () => {
+  const { user } = useAuth();
   return (
     <footer className="bg-gray-900 text-gray-300 py-10">
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -22,21 +23,26 @@ const Footer = () => {
                 Home
               </Link>
             </li>
-            <li>
-              <Link to="/create" className="hover:text-pink-500">
-                Create Meme
-              </Link>
-            </li>
+
             <li>
               <Link to="/leaderboard" className="hover:text-pink-500">
                 Leaderboard
               </Link>
             </li>
-            <li>
-              <Link to="/dashboard" className="hover:text-pink-500">
-                Dashboard
-              </Link>
-            </li>
+            {user && (
+              <li>
+                <Link to="/create" className="hover:text-pink-500">
+                  Create Meme
+                </Link>
+              </li>
+            )}
+            {user && (
+              <li>
+                <Link to="/dashboard" className="hover:text-pink-500">
+                  Dashboard
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
 
