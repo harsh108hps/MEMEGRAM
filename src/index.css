@@ -1,7 +1,7 @@
 @import "tailwindcss";
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -10,7 +10,7 @@
 
 ::-webkit-scrollbar-thumb {
   background-color: #e53888;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 /* Firefox */
@@ -39,5 +39,5 @@ html {
   display: flex;
   gap: 10px;
   flex-direction: column;
-  pointer-events: none; /* Prevents emojis from interfering with other UI elements */
+  pointer-events: none;
 }

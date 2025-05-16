@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import LoginModal from "./LoginModal";
@@ -21,7 +21,7 @@ const Navbar = () => {
   };
   return (
     <>
-      <nav className="bg-gray-900 text-white shadow-md">
+      <nav className="fixed top-0 left-0 w-full z-50 bg-gray-900 text-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -31,28 +31,50 @@ const Navbar = () => {
 
             {/* Desktop Links */}
             <div className="hidden md:flex space-x-6">
-              <Link to="/feed" className="hover:text-pink-500 transition">
+              <NavLink
+                to="/feed"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-pink-500 font-semibold"
+                    : "hover:text-pink-500 transition"
+                }
+              >
                 Feed
-              </Link>
+              </NavLink>
 
-              <Link
+              <NavLink
                 to="/leaderboard"
-                className="hover:text-pink-500 transition"
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-pink-500 font-semibold"
+                    : "hover:text-pink-500 transition"
+                }
               >
                 Leaderboard
-              </Link>
+              </NavLink>
               {user && (
-                <Link to="/create" className="hover:text-pink-500 transition">
+                <NavLink
+                  to="/create"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-pink-500 font-semibold"
+                      : "hover:text-pink-500 transition"
+                  }
+                >
                   Create
-                </Link>
+                </NavLink>
               )}
               {user && (
-                <Link
+                <NavLink
                   to="/dashboard"
-                  className="hover:text-pink-500 transition"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-pink-500 font-semibold"
+                      : "hover:text-pink-500 transition"
+                  }
                 >
                   Dashboard
-                </Link>
+                </NavLink>
               )}
             </div>
 
@@ -94,35 +116,51 @@ const Navbar = () => {
           {/* Mobile Menu */}
           {menuOpen && (
             <div className="md:hidden flex flex-col gap-4 mt-3 pb-4 border-t border-gray-700">
-              <Link
+              <NavLink
                 to="/feed"
                 onClick={toggleMenu}
-                className="block text-teal-300"
+                className={({ isActive }) =>
+                  `block ${
+                    isActive ? "text-pink-500 font-semibold" : "text-teal-300"
+                  }`
+                }
               >
                 Feed
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/create"
                 onClick={toggleMenu}
-                className="block text-teal-300"
+                className={({ isActive }) =>
+                  `block ${
+                    isActive ? "text-pink-500 font-semibold" : "text-teal-300"
+                  }`
+                }
               >
                 Create
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/leaderboard"
                 onClick={toggleMenu}
-                className="block text-teal-300"
+                className={({ isActive }) =>
+                  `block ${
+                    isActive ? "text-pink-500 font-semibold" : "text-teal-300"
+                  }`
+                }
               >
                 Leaderboard
-              </Link>
+              </NavLink>
               {user && (
-                <Link
+                <NavLink
                   to="/dashboard"
                   onClick={toggleMenu}
-                  className="block text-teal-300"
+                  className={({ isActive }) =>
+                    `block ${
+                      isActive ? "text-pink-500 font-semibold" : "text-teal-300"
+                    }`
+                  }
                 >
                   Dashboard
-                </Link>
+                </NavLink>
               )}
               {user ? (
                 <button

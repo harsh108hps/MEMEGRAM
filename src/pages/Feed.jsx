@@ -327,7 +327,7 @@ const Feed = () => {
         <p className="text-center text-gray-500">No memes available</p>
       )}
       {/* Emoji Animation */}
-      <div className="absolute bottom-0 right-0 flex gap-4 items-center animate-run">
+      <div className="absolute bottom-0 right-0 flex gap-4 items-center animate-run animate-bounce">
         {emojis.map((emoji) => (
           <div
             key={emoji.id}

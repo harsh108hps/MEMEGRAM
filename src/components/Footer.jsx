@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 const Footer = () => {
   const { user } = useAuth();
   return (
-    <footer className="bg-gray-900 text-gray-300 py-10">
+    <footer className="bg-gray-900 text-gray-300 py-10 rounded-t-3xl">
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Branding */}
         <div>
@@ -50,13 +50,25 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold mb-3 text-white">Follow Us</h3>
           <div className="flex space-x-4">
-            <a href="#" className="hover:text-pink-500">
+            <a
+              href="https://www.instagram.com"
+              target="_blank"
+              className="hover:text-pink-500"
+            >
               <Instagram size={20} />
             </a>
-            <a href="#" className="hover:text-pink-500">
+            <a
+              href="https://www.twitter.com"
+              target="_blank"
+              className="hover:text-pink-500"
+            >
               <Twitter size={20} />
             </a>
-            <a href="#" className="hover:text-pink-500">
+            <a
+              href="https://www.youtube.com"
+              target="_blank"
+              className="hover:text-pink-500"
+            >
               <Youtube size={20} />
             </a>
           </div>
