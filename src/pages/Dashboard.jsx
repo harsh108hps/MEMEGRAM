@@ -37,7 +37,6 @@ const Dashboard = () => {
         const userMemes = fetchedMemes.filter(m => m.userId === user.uid);
         setMyMemes(userMemes);
 
-        // Meme of the Day
         const now = Date.now();
         const past24h = fetchedMemes.filter(m =>
           now - m.createdAt?.seconds * 1000 < 24 * 60 * 60 * 1000
@@ -47,7 +46,6 @@ const Dashboard = () => {
           ((max.upvotes || 0) - (max.downvotes || 0)) ? meme : max, {});
         setMemeOfTheDay(topToday);
 
-        // Weekly Leaderboard
         const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
         const recentMemes = fetchedMemes.filter(
           m => m.createdAt?.seconds * 1000 > oneWeekAgo
@@ -78,25 +76,23 @@ const Dashboard = () => {
   };
 
   const getBadges = (meme) => {
-  const badges = [];
-  const upvotes = meme.upvotes || 0;
-  const downvotes = meme.downvotes || 0;
-  const views = meme.views || 0;
+    const badges = [];
+    const upvotes = meme.likes || 0;
+    const downvotes = meme.dislikes || 0;
+    const views = meme.views || 0;
 
-  if (upvotes < 10) return []; // 👈 Only show badges if upvotes ≥ 10
+    if (upvotes < 10) return [];
+    if (upvotes >= 10) badges.push("🏅 10 Likes Club");
+    if (views >= 10000) badges.push("🎖 10k Views Club");
+    if (upvotes - downvotes >= 50) badges.push("🔥 Viral Post");
 
-  if (upvotes >= 10) badges.push("🏅 10 Likes Club");
-  if (views >= 10000) badges.push("🎖 10k Views Club");
-  if (upvotes - downvotes >= 50) badges.push("🔥 Viral Post");
+    return badges;
+  };
 
-  return badges;
-};
-
-  const filteredMemes = myMemes
-    .filter(meme =>
-      (!filterTag || meme.tags?.includes(filterTag)) &&
-      (!searchQuery || meme.caption?.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+  const filteredMemes = myMemes.filter(meme =>
+    (!filterTag || meme.tags?.includes(filterTag)) &&
+    (!searchQuery || meme.caption?.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   const sortedMemes = [...filteredMemes].sort((a, b) => {
     if (sortType === "popularity") {
@@ -112,138 +108,88 @@ const Dashboard = () => {
   const paginatedMemes = sortedMemes.slice((page - 1) * memesPerPage, page * memesPerPage);
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h2 className="text-3xl font-bold mb-6 text-center">📊 My Meme Dashboard</h2>
+    
+    <div className="max-w-6xl mx-auto p-6 bg-gradient-to-br from-white via-blue-50 to-white rounded-xl shadow-lg">
+      <h2 className="text-4xl font-extrabold mb-8 text-center text-blue-700">📊 My Meme Dashboard</h2>
 
       {loading ? (
-        <p className="text-center">Loading...</p>
+        <p className="text-center text-lg font-medium text-gray-600">Loading...</p>
       ) : error ? (
-        <p className="text-center text-red-500">{error}</p>
+        <p className="text-center text-red-600 font-semibold">{error}</p>
       ) : (
         <>
           {memeOfTheDay?.id && (
-            <div className="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-6 rounded">
-              <h3 className="text-xl font-semibold mb-1">🌟 Meme of the Day</h3>
-              <p>{memeOfTheDay.caption}</p>
+            <div className="bg-yellow-100 border-l-8 border-yellow-500 p-5 mb-8 rounded-xl shadow">
+              <h3 className="text-2xl font-bold mb-2">🌟 Meme of the Day</h3>
+              <p className="text-lg italic">{memeOfTheDay.caption}</p>
             </div>
           )}
 
           {leaderboard.length > 0 && (
-            <div className="bg-blue-100 border-l-4 border-blue-500 p-4 mb-6 rounded">
-              <h3 className="text-xl font-semibold mb-2">🏆 Weekly Leaderboard</h3>
-              <ol className="list-decimal list-inside">
+            <div className="bg-blue-100 border-l-8 border-blue-500 p-5 mb-8 rounded-xl shadow">
+              <h3 className="text-2xl font-bold mb-3">🏆 Weekly Leaderboard</h3>
+              <ol className="list-decimal list-inside space-y-1 text-blue-800">
                 {leaderboard.slice(0, 5).map((entry, index) => (
-                  <li key={index}>User ID: {entry.uid} — Score: {entry.score}</li>
+                  <li key={index}>{entry.uid} - {entry.score} pts</li>
                 ))}
               </ol>
             </div>
           )}
 
-          <div className="flex flex-wrap gap-4 items-center mb-4">
-            <label className="text-sm font-medium">Sort by:</label>
-            <select
-              value={sortType}
-              onChange={(e) => setSortType(e.target.value)}
-              className="border px-2 py-1 rounded"
-            >
-              <option value="date">Newest</option>
-              <option value="popularity">Popularity</option>
-            </select>
+          {paginatedMemes.map(meme => (
+            <div key={meme.id} className="bg-white p-6 rounded-2xl shadow-xl mb-8 hover:shadow-2xl transition-shadow duration-300">
+              <div className="flex flex-col md:flex-row gap-6">
+                <img src={meme.imageUrl} alt="meme" className="w-full md:w-64 h-auto rounded-xl border border-gray-200 shadow-md" />
 
-            <input
-              type="text"
-              placeholder="Search caption..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="border px-2 py-1 rounded"
-            />
+                <div className="flex-1">
+                  <p className="text-2xl font-bold text-gray-900 mb-2">{meme.caption}</p>
+                  <p className="text-sm text-gray-500 mb-4">
+                    {meme.tags?.join(" ")} | {meme.createdAt?.toDate().toLocaleDateString()}
+                  </p>
 
-            <input
-              type="text"
-              placeholder="Filter by tag..."
-              value={filterTag}
-              onChange={(e) => setFilterTag(e.target.value)}
-              className="border px-2 py-1 rounded"
-            />
-          </div>
+                  <div className="flex flex-wrap gap-6 text-gray-700 text-lg font-medium items-center mb-3">
+                    <span className="flex items-center gap-1"><span className="text-2xl">👀</span> {meme.views || 0}</span>
+                    <span className="flex items-center gap-1 text-green-600"><span className="text-2xl">👍</span> {meme.likes || 0}</span>
+                    <span className="flex items-center gap-1 text-red-600"><span className="text-2xl">👎</span> {meme.dislikes || 0}</span>
+                    <span className="flex items-center gap-1 text-blue-600"><span className="text-2xl">💬</span> {meme.comments?.length || 0}</span>
+                  </div>
 
-          {paginatedMemes.length === 0 ? (
-            <p className="text-center text-gray-500">No memes match the criteria.</p>
-          ) : (
-            paginatedMemes.map(meme => (
-              <div key={meme.id} className="bg-white p-4 rounded shadow mb-4">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <img src={meme.imageUrl} alt="meme" className="w-full md:w-48 h-auto rounded" />
+                  <div className="mt-2 flex flex-wrap gap-3">
+                    {getBadges(meme).map((badge, i) => {
+                      const isTenLikesClub = badge.includes("10 Likes Club");
+                      return (
+                        <span
+                          key={i}
+                          className={`px-3 py-1 rounded-full font-semibold shadow-lg transition-all duration-300 text-sm ${
+                            isTenLikesClub
+                              ? "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border border-yellow-600 scale-105"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {badge}
+                        </span>
+                      );
+                    })}
+                  </div>
 
-                  <div className="flex-1">
-                    <p className="text-lg font-semibold">{meme.caption}</p>
-                    <p className="text-sm text-gray-500 mb-2">
-                      {meme.tags?.join(" ")} | {meme.createdAt?.toDate().toLocaleDateString()}
-                    </p>
-
-                    <div className="flex gap-4 text-sm text-gray-700">
-                      <span>👀 {meme.views || 0}</span>
-                      <span>👍 {meme.upvotes || 0}</span>
-                      <span>👎 {meme.downvotes || 0}</span>
-                      <span>💬 {meme.comments?.length || 0}</span>
-                    </div>
-                    <div className="mt-1 flex flex-wrap gap-2">
-  {getBadges(meme).map((badge, i) => (
-    <span
-      key={i}
-      className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full text-xs font-semibold"
-    >
-      {badge}
-    </span>
-  ))}
-</div>
-
-
-                    <div className="mt-1 text-sm text-yellow-600">
-                      {getBadges(meme).map((badge, i) => (
-                        <span key={i} className="mr-2">{badge}</span>
-                      ))}
-                    </div>
-
-                    <div className="mt-2 flex gap-2">
-                      <button
-                        className="bg-blue-500 text-white px-3 py-1 rounded text-sm"
-                        onClick={() => alert("Edit coming soon...")}
-                      >
-                        ✏️ Edit
-                      </button>
-                      <button
-                        className="bg-red-500 text-white px-3 py-1 rounded text-sm"
-                        onClick={() => handleDelete(meme.id)}
-                      >
-                        🗑 Delete
-                      </button>
-                    </div>
+                  <div className="mt-4 flex gap-4">
+                    <button
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow"
+                      onClick={() => alert("Edit coming soon...")}
+                    >
+                      ✏️ Edit
+                    </button>
+                    <button
+                      className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow"
+                      onClick={() => handleDelete(meme.id)}
+                    >
+                      🗑 Delete
+                    </button>
                   </div>
                 </div>
               </div>
-            ))
-          )}
-
-          {totalPages > 1 && (
-            <div className="flex justify-center gap-2 mt-4">
-              <button
-                className="px-3 py-1 bg-gray-300 rounded"
-                disabled={page === 1}
-                onClick={() => setPage(page - 1)}
-              >
-                Prev
-              </button>
-              <span className="px-2">Page {page} of {totalPages}</span>
-              <button
-                className="px-3 py-1 bg-gray-300 rounded"
-                disabled={page === totalPages}
-                onClick={() => setPage(page + 1)}
-              >
-                Next
-              </button>
             </div>
-          )}
+          ))}
         </>
       )}
     </div>
