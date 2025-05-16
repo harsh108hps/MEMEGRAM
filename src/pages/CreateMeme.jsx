@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
+import { firestore, storage } from "../../firebase-config";
+import { useAuth } from "../contexts/AuthContext";
 
 const CreateMeme = () => {
+  const { user } = useAuth();
   const [image, setImage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
-  const [imageUrlInput, setImageUrlInput] = useState('');
-  const [topText, setTopText] = useState('');
-  const [bottomText, setBottomText] = useState('');
+  const [imageUrlInput, setImageUrlInput] = useState("");
+  const [topText, setTopText] = useState("");
+  const [bottomText, setBottomText] = useState("");
   const [fontSize, setFontSize] = useState(28);
-  const [fontColor, setFontColor] = useState('#ffffff');
-  const [alignment, setAlignment] = useState('center');
-  const [tagsInput, setTagsInput] = useState('');
-  const [suggestedCaption, setSuggestedCaption] = useState('');
+  const [fontColor, setFontColor] = useState("#ffffff");
+  const [alignment, setAlignment] = useState("center");
+  const [tagsInput, setTagsInput] = useState("");
+  const [suggestedCaption, setSuggestedCaption] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -33,44 +40,64 @@ const CreateMeme = () => {
       "Me waiting for the weekend like...",
       "This is peak performance 😂",
       "Life before coffee vs after ☕",
-      "Debugging: 90% staring, 10% fixing"
+      "Debugging: 90% staring, 10% fixing",
     ];
     const random = captions[Math.floor(Math.random() * captions.length)];
     setSuggestedCaption(random);
   };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
+    setLoading(true);
     if (!image) {
       alert("Please provide an image.");
       return;
     }
 
+    if (!user) {
+      alert("Please log in to publish a meme.");
+      return;
+    }
     const formattedTags = tagsInput
-      .split(',')
-      .map(tag => tag.trim().replace(/^#/, '').toLowerCase())
-      .filter(tag => tag.length > 0);
-
-    console.log("📸 Meme ready to publish (no Firebase):", {
-      image,
-      topText,
-      bottomText,
-      fontSize,
-      fontColor,
-      alignment,
-      tags: formattedTags
-    });
-
-    alert("✅ Meme ready! (Not stored yet - Firebase disabled)");
-
-    // Reset
-    setImage(null);
-    setImageFile(null);
-    setTopText('');
-    setBottomText('');
-    setFontSize(28);
-    setFontColor('#ffffff');
-    setAlignment('center');
-    setTagsInput('');
+      .split(",")
+      .map((tag) => tag.trim().replace(/^#/, "").toLowerCase())
+      .filter((tag) => tag.length > 0);
+    try {
+      let imageUrl = image;
+      if (imageFile) {
+        const imageRef = ref(storage, `memes/${uuidv4()}`);
+        const snapshot = await uploadBytes(imageRef, imageFile);
+        imageUrl = await getDownloadURL(snapshot.ref);
+      }
+      await addDoc(collection(firestore, "memes"), {
+        imageUrl,
+        topText,
+        bottomText,
+        fontSize,
+        fontColor,
+        alignment,
+        tags: formattedTags,
+        suggestedCaption,
+        createdAt: serverTimestamp(),
+        userId: user.uid,
+        userName: user.displayName || user.email,
+      });
+      alert("Meme published successfully!");
+      setImage(null);
+      setImageFile(null);
+      setTopText("");
+      setBottomText("");
+      setFontSize(28);
+      setFontColor("#ffffff");
+      setAlignment("center");
+      setTagsInput("");
+      setSuggestedCaption("");
+      setImageUrlInput("");
+    } catch (error) {
+      console.error("Error publishing meme:", error);
+      alert("❌ Failed to publish meme.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -80,7 +107,12 @@ const CreateMeme = () => {
       <div className="grid md:grid-cols-2 gap-6">
         <div>
           <label className="block font-medium">Upload Image</label>
-          <input type="file" accept="image/*" onChange={handleImageUpload} className="mb-4" />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="mb-4"
+          />
 
           <label className="block font-medium">or Paste Image URL</label>
           <div className="flex space-x-2 mb-4">
@@ -100,24 +132,47 @@ const CreateMeme = () => {
           </div>
 
           <label className="block font-medium">Top Text</label>
-          <input type="text" value={topText} onChange={(e) => setTopText(e.target.value)} className="w-full p-2 border rounded mb-2" />
+          <input
+            type="text"
+            value={topText}
+            onChange={(e) => setTopText(e.target.value)}
+            className="w-full p-2 border rounded mb-2"
+          />
 
           <label className="block font-medium">Bottom Text</label>
-          <input type="text" value={bottomText} onChange={(e) => setBottomText(e.target.value)} className="w-full p-2 border rounded mb-2" />
+          <input
+            type="text"
+            value={bottomText}
+            onChange={(e) => setBottomText(e.target.value)}
+            className="w-full p-2 border rounded mb-2"
+          />
 
           <div className="flex space-x-2 mb-2">
             <label className="block font-medium">Font Size</label>
-            <input type="number" value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} className="w-20 p-1 border rounded" />
+            <input
+              type="number"
+              value={fontSize}
+              onChange={(e) => setFontSize(Number(e.target.value))}
+              className="w-20 p-1 border rounded"
+            />
           </div>
 
           <div className="flex space-x-4 mb-4">
             <label className="block font-medium">Font Color</label>
-            <input type="color" value={fontColor} onChange={(e) => setFontColor(e.target.value)} />
+            <input
+              type="color"
+              value={fontColor}
+              onChange={(e) => setFontColor(e.target.value)}
+            />
           </div>
 
           <div className="mb-4">
             <label className="block font-medium">Text Alignment</label>
-            <select value={alignment} onChange={(e) => setAlignment(e.target.value)} className="w-full p-2 border rounded">
+            <select
+              value={alignment}
+              onChange={(e) => setAlignment(e.target.value)}
+              className="w-full p-2 border rounded"
+            >
               <option value="left">Left</option>
               <option value="center">Center</option>
               <option value="right">Right</option>
@@ -142,14 +197,16 @@ const CreateMeme = () => {
             >
               Generate AI Caption
             </button>
-            {suggestedCaption && <p className="mt-2 text-gray-700 italic">💡 {suggestedCaption}</p>}
+            {suggestedCaption && (
+              <p className="mt-2 text-gray-700 italic">💡 {suggestedCaption}</p>
+            )}
           </div>
 
           <button
             onClick={handlePublish}
             className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
           >
-            Publish Meme
+            {loading ? "Publishing..." : "Publish Meme"}
           </button>
         </div>
 
@@ -172,7 +229,9 @@ const CreateMeme = () => {
               </div>
             </div>
           ) : (
-            <div className="text-gray-500 text-center p-4">No image selected</div>
+            <div className="text-gray-500 text-center p-4">
+              No image selected
+            </div>
           )}
         </div>
       </div>
