@@ -4,6 +4,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { firestore, storage } from "../../firebase-config";
 import { useAuth } from "../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const CreateMeme = () => {
   const { user } = useAuth();
@@ -49,12 +50,12 @@ const CreateMeme = () => {
   const handlePublish = async () => {
     setLoading(true);
     if (!image) {
-      alert("Please provide an image.");
+      toast.warning("Please provide an image.");
       return;
     }
 
     if (!user) {
-      alert("Please log in to publish a meme.");
+      toast.warning("Please log in to publish a meme.");
       return;
     }
     const formattedTags = tagsInput
@@ -80,8 +81,10 @@ const CreateMeme = () => {
         createdAt: serverTimestamp(),
         userId: user.uid,
         userName: user.displayName || user.email,
+        likes: 0,
+        dislikes: 0,
       });
-      alert("Meme published successfully!");
+      toast.success("Meme published successfully!");
       setImage(null);
       setImageFile(null);
       setTopText("");
@@ -94,7 +97,7 @@ const CreateMeme = () => {
       setImageUrlInput("");
     } catch (error) {
       console.error("Error publishing meme:", error);
-      alert("❌ Failed to publish meme.");
+      toast.error("❌ Failed to publish meme.");
     } finally {
       setLoading(false);
     }

@@ -15,8 +15,12 @@
     "firebase": "^11.7.3",
     "lucide-react": "^0.510.0",
     "react": "^19.1.0",
+    "react-confetti": "^6.4.0",
+    "react-confetti-boom": "^1.1.2",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.0",
+    "react-toastify": "^11.0.5",
+    "react-use": "^17.6.0",
     "tailwindcss": "^4.1.7",
     "uuid": "^11.1.0"
   },
