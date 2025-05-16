@@ -9,17 +9,24 @@ import {
 import { firestore } from "../../firebase-config";
 import Confetti from "react-confetti";
 import useWindowSize from "react-use/lib/useWindowSize";
+import { useAuth } from "../contexts/AuthContext";
+import { MdOutlineArrowBackIos } from "react-icons/md";
+import { MdOutlineArrowForwardIos } from "react-icons/md";
 
 const Feed = () => {
+  const { user } = useAuth();
   const [memes, setMemes] = useState([]);
   const [votes, setVotes] = useState({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [filter, setFilter] = useState("New");
   const [showConfetti, setShowConfetti] = useState(false);
   const { width, height } = useWindowSize();
+  const [newComment, setNewComment] = useState("");
 
   const emojiList = ["🔥", "😂", "🎉", "💥", "🤩", "🥳"];
   const [emojis, setEmojis] = useState([]);
+
+  const [currentCommentIndex, setCurrentCommentIndex] = useState(0);
 
   useEffect(() => {
     const fetchMemes = async () => {
@@ -77,10 +84,25 @@ const Feed = () => {
         ...prev,
         { emoji: randomEmoji, id: Date.now() + Math.random() },
       ]);
-    }, 300); // Adds new emoji every 300ms
+    }, 400); // Adds new emoji every 300ms
 
     return () => clearInterval(interval); // Clean up the interval on component unmount
   }, []);
+
+  useEffect(() => {
+    if (!memes[currentIndex]?.comments?.length) return;
+
+    const interval = setInterval(() => {
+      setCurrentCommentIndex(
+        (prev) => (prev + 1) % memes[currentIndex].comments.length
+      );
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [currentIndex, memes]);
+  useEffect(() => {
+    setCurrentCommentIndex(0);
+  }, [currentIndex]);
   const handleVote = async (id, type) => {
     if (votes[id]) return;
     const memeRef = doc(firestore, "memes", id);
@@ -107,7 +129,7 @@ const Feed = () => {
 
       if (type === "up") {
         setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 5000);
+        setTimeout(() => setShowConfetti(false), 4000);
       }
     } catch (error) {
       console.error("Error updating vote:", error);
@@ -115,7 +137,7 @@ const Feed = () => {
   };
   const currentMeme = memes[currentIndex];
   return (
-    <div className="p-4 max-w-4xl mx-auto">
+    <div className="p-4 max-w-4xl mx-auto ">
       {showConfetti && <Confetti width={width} height={height} />}
       <h1 className="text-3xl font-bold mb-6 text-center">🔥 Meme Feed</h1>
       <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6">
@@ -209,7 +231,77 @@ const Feed = () => {
                 👎 {currentMeme.dislikes}
               </button>
             </div>
+            <div className="mt-4">
+              <h3 className="font-semibold text-gray-700 mb-2">💬 Comments</h3>
+              <div className="text-sm bg-gray-100 p-3 rounded h-10 flex items-center justify-center">
+                {currentMeme.comments?.length > 0 ? (
+                  <div key={currentCommentIndex}>
+                    <span className="font-medium">
+                      {currentMeme.comments[currentCommentIndex]?.userName}:
+                    </span>{" "}
+                    {currentMeme.comments[currentCommentIndex]?.text}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">No comments yet.</p>
+                )}
+              </div>
+            </div>
+            {user ? (
+              <div className="mt-2 mb-2flex items-center gap-2">
+                <input
+                  type="text"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Write a comment..."
+                  className="flex-1 border-b border-gray-400 focus:outline-none focus:border-blue-500 text-sm px-1"
+                />
+                <button
+                  onClick={async () => {
+                    if (!newComment.trim()) return;
 
+                    const memeRef = doc(firestore, "memes", currentMeme.id);
+                    const newCommentObj = {
+                      userName: user.displayName || user.email,
+                      text: newComment.trim(),
+                      timestamp: new Date(),
+                    };
+
+                    try {
+                      await updateDoc(memeRef, {
+                        comments: [
+                          ...(currentMeme.comments || []),
+                          newCommentObj,
+                        ],
+                      });
+
+                      setMemes((prev) =>
+                        prev.map((meme) =>
+                          meme.id === currentMeme.id
+                            ? {
+                                ...meme,
+                                comments: [
+                                  ...(meme.comments || []),
+                                  newCommentObj,
+                                ],
+                              }
+                            : meme
+                        )
+                      );
+                      setNewComment("");
+                    } catch (err) {
+                      console.error("Failed to post comment:", err);
+                    }
+                  }}
+                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                >
+                  Post
+                </button>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500 mt-2">
+                Login to post a comment.
+              </p>
+            )}
             {/* Navigation */}
             <div className="flex justify-between">
               <button
@@ -217,7 +309,7 @@ const Feed = () => {
                 disabled={currentIndex === 0}
                 className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
               >
-                Previous
+                <MdOutlineArrowBackIos className="inline-block" />
               </button>
               <button
                 onClick={() =>
@@ -226,7 +318,7 @@ const Feed = () => {
                 disabled={currentIndex === memes.length - 1}
                 className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
               >
-                Next
+                <MdOutlineArrowForwardIos className="inline-block" />
               </button>
             </div>
           </div>
