@@ -11,6 +11,7 @@ import {
 import { firestore, auth } from "../../firebase-config";
 import { useAuth } from "../contexts/AuthContext";
 import EditModal from "../components/EditModal";
+import { m } from "framer-motion";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -126,9 +127,9 @@ const Dashboard = () => {
   );
 
   const sortedMemes = [...filteredMemes].sort((a, b) => {
-    if (sortType === "popularity") {
-      const scoreA = (a.upvotes || 0) - (a.downvotes || 0);
-      const scoreB = (b.upvotes || 0) - (b.downvotes || 0);
+    if (sortType === "likes") {
+      const scoreA = (a.likes || 0) - (a.dislikes || 0);
+      const scoreB = (b.likes || 0) - (b.dislikes || 0);
       return scoreB - scoreA;
     } else {
       return b.createdAt?.seconds - a.createdAt?.seconds;
@@ -174,11 +175,20 @@ const Dashboard = () => {
               </ol>
             </div>
           )}
-
+          <div className="flex justify-between mb-4">
+            <select
+              className="border rounded p-2 text-sm"
+              value={sortType}
+              onChange={(e) => setSortType(e.target.value)}
+            >
+              <option value="date">Sort by Date</option>
+              <option value="likes">Sort by Likes</option>
+            </select>
+          </div>
           {paginatedMemes.map((meme) => (
             <div
               key={meme.id}
-              className="bg-white p-6 rounded-2xl shadow-xl mb-8 hover:shadow-2xl transition-shadow duration-300"
+              className="bg-gray-100 p-6 rounded-2xl shadow-xl mb-8 hover:shadow-2xl transition-shadow duration-300 relative flex-1"
             >
               <div className="flex flex-col md:flex-row gap-6">
                 <img
@@ -195,11 +205,22 @@ const Dashboard = () => {
                     {meme.tags?.join(" ")} |{" "}
                     {meme.createdAt?.toDate().toLocaleDateString()}
                   </p>
-
-                  <div className="flex flex-wrap gap-6 text-gray-700 text-lg font-medium items-center mb-3">
-                    <span className="flex items-center gap-1">
-                      <span className="text-2xl">👀</span> {meme.views || 0}
+                  <p className="text-wrap truncate">
+                    <span className="font-bold">Top Text:</span> {meme.topText}
+                  </p>
+                  <p className="text-wrap truncate">
+                    <span>
+                      <span className="font-bold">Bottom Text:</span>{" "}
+                      {meme.bottomText}
                     </span>
+                  </p>
+                  <div className="flex flex-wrap gap-6 text-gray-700 text-lg font-medium items-center mb-3">
+                    <span className="flex items-center gap-1 relative">
+                      <span className="absolute w-4 h-4 rounded-full bg-red-500 opacity-75 animate-ping -top-1 -left-1"></span>
+                      <span className="text-2xl z-10">👀</span>{" "}
+                      {meme.views || 0}
+                    </span>
+
                     <span className="flex items-center gap-1 text-green-600">
                       <span className="text-2xl">👍</span> {meme.likes || 0}
                     </span>
@@ -212,7 +233,7 @@ const Dashboard = () => {
                     </span>
                   </div>
 
-                  <div className="mt-2 flex flex-wrap gap-3">
+                  <div className="absolute right-0 top-0 flex flex-col lg:flex-row gap-2 mt-2 mr-2">
                     {getBadges(meme).map((badge, i) => {
                       const isTenLikesClub = badge.includes("10 Likes Club");
                       return (
@@ -220,7 +241,7 @@ const Dashboard = () => {
                           key={i}
                           className={`px-3 py-1 rounded-full font-semibold shadow-lg transition-all duration-300 text-sm ${
                             isTenLikesClub
-                              ? "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border border-yellow-600 scale-105"
+                              ? "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border border-yellow-600 scale-105 animate-bounce"
                               : "bg-yellow-100 text-yellow-800"
                           }`}
                         >

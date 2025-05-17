@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase-config";
 import { toast } from "react-toastify";
 const EditModal = ({
@@ -15,7 +15,11 @@ const EditModal = ({
   const handleSave = async () => {
     setLoading(true);
     try {
-      await updateDoc(doc(firestore, "memes", editingMeme.id), editForm);
+      const updatedData = {
+        ...editForm,
+        createdAt: serverTimestamp(),
+      };
+      await updateDoc(doc(firestore, "memes", editingMeme.id), updatedData);
       setMyMemes((prev) =>
         prev.map((m) => (m.id === editingMeme.id ? { ...m, ...editForm } : m))
       );

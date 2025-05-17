@@ -12,7 +12,8 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import { useAuth } from "../contexts/AuthContext";
 import { MdOutlineArrowBackIos } from "react-icons/md";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
-
+import { toast } from "react-toastify";
+import { useSearchParams } from "react-router-dom";
 const Feed = () => {
   const { user } = useAuth();
   const [memes, setMemes] = useState([]);
@@ -22,6 +23,7 @@ const Feed = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const { width, height } = useWindowSize();
   const [newComment, setNewComment] = useState("");
+  const [searchParams] = useSearchParams();
 
   const emojiList = ["🔥", "😂", "🎉", "💥", "🤩", "🥳"];
   const [emojis, setEmojis] = useState([]);
@@ -69,11 +71,22 @@ const Feed = () => {
           );
       }
       setMemes(memeList);
+      //Jump to meme from ?id = query
+      const memeIdFromQuery = searchParams.get("id");
+      if (memeIdFromQuery) {
+        const index = memeList.findIndex((m) => m.id === memeIdFromQuery);
+        if (index !== -1) {
+          setCurrentIndex(index);
+        }
+      } else {
+        // If no query param, set to 0
+        setCurrentIndex(0);
+      }
       setCurrentIndex(0);
     };
 
     fetchMemes();
-  }, [filter]);
+  }, [filter, searchParams]);
 
   useEffect(() => {
     // Start generating emojis at random intervals
@@ -84,7 +97,7 @@ const Feed = () => {
         ...prev,
         { emoji: randomEmoji, id: Date.now() + Math.random() },
       ]);
-    }, 800); // Adds new emoji every 300ms
+    }, 800);
 
     return () => clearInterval(interval); // Clean up the interval on component unmount
   }, []);
@@ -232,6 +245,28 @@ const Feed = () => {
               >
                 👎 {currentMeme.dislikes}
               </button>
+              <button
+                onClick={async () => {
+                  const url = `${window.location.origin}/feed?id=${currentMeme.id}`;
+                  try {
+                    if (navigator.clipboard) {
+                      await navigator.share({
+                        title: "Check out this meme!",
+                        text: currentMeme.suggestedCaption || "LOL 😂",
+                        url,
+                      });
+                    } else {
+                      await navigator.clipboard.writeText(url);
+                      toast.info("Link copied to clipboard!");
+                    }
+                  } catch (err) {
+                    console.error("Failed to copy link:", err);
+                  }
+                }}
+                className="bg-yellow-200 hover:bg-yellow-300 text-gray-800 px-3 py-1 rounded"
+              >
+                🔗 Share
+              </button>
             </div>
             <div className="mt-4">
               <h3 className="font-semibold text-gray-700 mb-2">💬 Comments</h3>
@@ -329,7 +364,7 @@ const Feed = () => {
         <p className="text-center text-gray-500">No memes available</p>
       )}
       {/* Emoji Animation */}
-      <div className="absolute bottom-0 right-0 flex gap-4 items-center animate-run animate-bounce">
+      <div className="absolute bottom-0 right-0 flex gap-4 items-center animate-run animate-bounce z-50">
         {emojis.map((emoji) => (
           <div
             key={emoji.id}
