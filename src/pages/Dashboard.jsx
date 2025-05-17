@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  collection,
-  getDocs,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { firestore } from "../../firebase-config";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -28,30 +23,35 @@ const Dashboard = () => {
         if (!user) return;
         setLoading(true);
         const querySnapshot = await getDocs(collection(firestore, "memes"));
-        const fetchedMemes = querySnapshot.docs.map(doc => ({
+        const fetchedMemes = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
 
         setAllMemes(fetchedMemes);
-        const userMemes = fetchedMemes.filter(m => m.userId === user.uid);
+        const userMemes = fetchedMemes.filter((m) => m.userId === user.uid);
         setMyMemes(userMemes);
 
         const now = Date.now();
-        const past24h = fetchedMemes.filter(m =>
-          now - m.createdAt?.seconds * 1000 < 24 * 60 * 60 * 1000
+        const past24h = fetchedMemes.filter(
+          (m) => now - m.createdAt?.seconds * 1000 < 24 * 60 * 60 * 1000
         );
-        const topToday = past24h.reduce((max, meme) =>
-          ((meme.upvotes || 0) - (meme.downvotes || 0)) >
-          ((max.upvotes || 0) - (max.downvotes || 0)) ? meme : max, {});
+        const topToday = past24h.reduce(
+          (max, meme) =>
+            (meme.upvotes || 0) - (meme.downvotes || 0) >
+            (max.upvotes || 0) - (max.downvotes || 0)
+              ? meme
+              : max,
+          {}
+        );
         setMemeOfTheDay(topToday);
 
         const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
         const recentMemes = fetchedMemes.filter(
-          m => m.createdAt?.seconds * 1000 > oneWeekAgo
+          (m) => m.createdAt?.seconds * 1000 > oneWeekAgo
         );
         const userStats = {};
-        recentMemes.forEach(m => {
+        recentMemes.forEach((m) => {
           const netVotes = (m.upvotes || 0) - (m.downvotes || 0);
           if (!userStats[m.userId]) userStats[m.userId] = { total: 0 };
           userStats[m.userId].total += netVotes;
@@ -72,7 +72,7 @@ const Dashboard = () => {
 
   const handleDelete = async (id) => {
     await deleteDoc(doc(firestore, "memes", id));
-    setMyMemes(prev => prev.filter(meme => meme.id !== id));
+    setMyMemes((prev) => prev.filter((meme) => meme.id !== id));
   };
 
   const getBadges = (meme) => {
@@ -89,9 +89,11 @@ const Dashboard = () => {
     return badges;
   };
 
-  const filteredMemes = myMemes.filter(meme =>
-    (!filterTag || meme.tags?.includes(filterTag)) &&
-    (!searchQuery || meme.caption?.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredMemes = myMemes.filter(
+    (meme) =>
+      (!filterTag || meme.tags?.includes(filterTag)) &&
+      (!searchQuery ||
+        meme.caption?.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const sortedMemes = [...filteredMemes].sort((a, b) => {
@@ -105,15 +107,21 @@ const Dashboard = () => {
   });
 
   const totalPages = Math.ceil(sortedMemes.length / memesPerPage);
-  const paginatedMemes = sortedMemes.slice((page - 1) * memesPerPage, page * memesPerPage);
+  const paginatedMemes = sortedMemes.slice(
+    (page - 1) * memesPerPage,
+    page * memesPerPage
+  );
 
   return (
-    
     <div className="max-w-6xl mx-auto p-6 bg-gradient-to-br from-white via-blue-50 to-white rounded-xl shadow-lg">
-      <h2 className="text-4xl font-extrabold mb-8 text-center text-blue-700">📊 My Meme Dashboard</h2>
+      <h2 className="text-4xl font-extrabold mb-8 text-center text-blue-700">
+        📊 My Meme Dashboard
+      </h2>
 
       {loading ? (
-        <p className="text-center text-lg font-medium text-gray-600">Loading...</p>
+        <p className="text-center text-lg font-medium text-gray-600">
+          Loading...
+        </p>
       ) : error ? (
         <p className="text-center text-red-600 font-semibold">{error}</p>
       ) : (
@@ -121,7 +129,7 @@ const Dashboard = () => {
           {memeOfTheDay?.id && (
             <div className="bg-yellow-100 border-l-8 border-yellow-500 p-5 mb-8 rounded-xl shadow">
               <h3 className="text-2xl font-bold mb-2">🌟 Meme of the Day</h3>
-              <p className="text-lg italic">{memeOfTheDay.caption}</p>
+              <p className="text-lg italic">{memeOfTheDay.suggestedCaption}</p>
             </div>
           )}
 
@@ -130,28 +138,49 @@ const Dashboard = () => {
               <h3 className="text-2xl font-bold mb-3">🏆 Weekly Leaderboard</h3>
               <ol className="list-decimal list-inside space-y-1 text-blue-800">
                 {leaderboard.slice(0, 5).map((entry, index) => (
-                  <li key={index}>{entry.uid} - {entry.score} pts</li>
+                  <li key={index}>
+                    {entry.uid} - {entry.score} pts
+                  </li>
                 ))}
               </ol>
             </div>
           )}
 
-          {paginatedMemes.map(meme => (
-            <div key={meme.id} className="bg-white p-6 rounded-2xl shadow-xl mb-8 hover:shadow-2xl transition-shadow duration-300">
+          {paginatedMemes.map((meme) => (
+            <div
+              key={meme.id}
+              className="bg-white p-6 rounded-2xl shadow-xl mb-8 hover:shadow-2xl transition-shadow duration-300"
+            >
               <div className="flex flex-col md:flex-row gap-6">
-                <img src={meme.imageUrl} alt="meme" className="w-full md:w-64 h-auto rounded-xl border border-gray-200 shadow-md" />
+                <img
+                  src={meme.imageUrl}
+                  alt="meme"
+                  className="w-full md:w-64 h-auto rounded-xl border border-gray-200 shadow-md"
+                />
 
                 <div className="flex-1">
-                  <p className="text-2xl font-bold text-gray-900 mb-2">{meme.caption}</p>
+                  <p className="text-2xl font-bold text-gray-900 mb-2">
+                    {meme.caption}
+                  </p>
                   <p className="text-sm text-gray-500 mb-4">
-                    {meme.tags?.join(" ")} | {meme.createdAt?.toDate().toLocaleDateString()}
+                    {meme.tags?.join(" ")} |{" "}
+                    {meme.createdAt?.toDate().toLocaleDateString()}
                   </p>
 
                   <div className="flex flex-wrap gap-6 text-gray-700 text-lg font-medium items-center mb-3">
-                    <span className="flex items-center gap-1"><span className="text-2xl">👀</span> {meme.views || 0}</span>
-                    <span className="flex items-center gap-1 text-green-600"><span className="text-2xl">👍</span> {meme.likes || 0}</span>
-                    <span className="flex items-center gap-1 text-red-600"><span className="text-2xl">👎</span> {meme.dislikes || 0}</span>
-                    <span className="flex items-center gap-1 text-blue-600"><span className="text-2xl">💬</span> {meme.comments?.length || 0}</span>
+                    <span className="flex items-center gap-1">
+                      <span className="text-2xl">👀</span> {meme.views || 0}
+                    </span>
+                    <span className="flex items-center gap-1 text-green-600">
+                      <span className="text-2xl">👍</span> {meme.likes || 0}
+                    </span>
+                    <span className="flex items-center gap-1 text-red-600">
+                      <span className="text-2xl">👎</span> {meme.dislikes || 0}
+                    </span>
+                    <span className="flex items-center gap-1 text-blue-600">
+                      <span className="text-2xl">💬</span>{" "}
+                      {meme.comments?.length || 0}
+                    </span>
                   </div>
 
                   <div className="mt-2 flex flex-wrap gap-3">

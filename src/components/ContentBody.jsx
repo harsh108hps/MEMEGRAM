@@ -13,7 +13,11 @@ const ContentBody = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false); // Modal visibility state
 
   const handleSignUp = () => {
-    setShowRegisterModal(true);
+    if (user) {
+      toast.info("You are already a Premium user.");
+    } else {
+      setShowRegisterModal(true);
+    }
   };
 
   const handleCloseModal = () => {
@@ -52,7 +56,6 @@ const ContentBody = () => {
           </Link>
         </div>
       </section>
-      
 
       {/* Feature Highlights */}
       <section className="py-16 px-6 max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
@@ -100,13 +103,24 @@ const ContentBody = () => {
       <section className="bg-pink-600 text-white py-12 text-center">
         <h2 className="text-2xl font-bold">Ready to Become a Meme Legend?</h2>
         <p className="mt-2">Join MEMEGRAM and let your creativity go viral.</p>
+
+        {/* Marquee with effects */}
+        <div className="overflow-hidden bg-yellow-200 py-2 mt-4">
+          <div className="animate-marquee text-red-600 font-bold tracking-tight">
+            🚨 50% OFF Premium Plans 💥 | 🎁 New User Bonus | ⚡ Create Viral
+            Memes Instantly | 🚨 50% OFF Premium Plans 💥 | 🎁 New User Bonus |
+            ⚡
+          </div>
+        </div>
+
         <button
           onClick={handleSignUp}
-          className="mt-4 inline-block bg-white text-pink-600 px-6 py-3 rounded-full hover:bg-gray-100"
+          className="mt-6 inline-block bg-white text-pink-600 px-6 py-3 rounded-full hover:bg-gray-100"
         >
-          Sign Up Now
+          Upgrade Plan
         </button>
       </section>
+
       {showRegisterModal && <RegisterModal onClose={handleCloseModal} />}
     </main>
   );
