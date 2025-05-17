@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { firestore } from "../../firebase-config";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  updateDoc,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import { firestore, auth } from "../../firebase-config";
 import { useAuth } from "../contexts/AuthContext";
+import EditModal from "../components/EditModal";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -16,7 +25,27 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const memesPerPage = 5;
+  const [editingMeme, setEditingMeme] = useState(null);
+  const [editForm, setEditForm] = useState({
+    suggestedCaption: "",
+    tags: [],
+    bottomText: "",
+    topText: "",
+    fontColor: "",
+    fontSize: 0,
+  });
 
+  const handleEditClick = (meme) => {
+    setEditingMeme(meme);
+    setEditForm({
+      topText: meme.topText || "",
+      bottomText: meme.bottomText || "",
+      fontSize: meme.fontSize || 24,
+      fontColor: meme.fontColor || "#000000",
+      suggestedCaption: meme.suggestedCaption || "",
+      tags: meme.tags || [],
+    });
+  };
   useEffect(() => {
     const fetchMemes = async () => {
       try {
@@ -160,7 +189,7 @@ const Dashboard = () => {
 
                 <div className="flex-1">
                   <p className="text-2xl font-bold text-gray-900 mb-2">
-                    {meme.caption}
+                    {meme.suggestedCaption}
                   </p>
                   <p className="text-sm text-gray-500 mb-4">
                     {meme.tags?.join(" ")} |{" "}
@@ -204,7 +233,7 @@ const Dashboard = () => {
                   <div className="mt-4 flex gap-4">
                     <button
                       className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow"
-                      onClick={() => alert("Edit coming soon...")}
+                      onClick={() => handleEditClick(meme)}
                     >
                       ✏️ Edit
                     </button>
@@ -221,6 +250,13 @@ const Dashboard = () => {
           ))}
         </>
       )}
+      <EditModal
+        editingMeme={editingMeme}
+        setEditingMeme={setEditingMeme}
+        editForm={editForm}
+        setEditForm={setEditForm}
+        setMyMemes={setMyMemes}
+      />
     </div>
   );
 };

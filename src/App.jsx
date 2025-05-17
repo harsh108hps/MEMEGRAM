@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Footer from "./components/Footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,6 +13,21 @@ import Dashboard from "./pages/Dashboard";
 import LeaderBoard from "./pages/LeaderBoard";
 
 function App() {
+  const location = useLocation();
+  useEffect(() => {
+    if (location.pathname === "/feed") {
+      document.body.style.backgroundColor = "#2a3767";
+    } else if (location.pathname === "/dashboard") {
+      document.body.style.backgroundColor = "#2a3767";
+    } else if (location.pathname === "/leaderboard") {
+      document.body.style.backgroundColor = "#2a3767";
+    } else {
+      document.body.style.backgroundColor = "#ffffff";
+    }
+    return () => {
+      document.body.style.backgroundColor = "";
+    };
+  }, [location.pathname]);
   return (
     <>
       <div className="h-screen flex flex-col">

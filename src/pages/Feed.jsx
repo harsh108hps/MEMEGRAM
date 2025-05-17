@@ -139,7 +139,9 @@ const Feed = () => {
   return (
     <div className="p-4 max-w-4xl mx-auto ">
       {showConfetti && <Confetti width={width} height={height} />}
-      <h1 className="text-3xl font-bold mb-6 text-center">🔥 Meme Feed</h1>
+      <h1 className="text-3xl text-gray-100 font-bold mb-6 text-center">
+        🔥 Meme Feed
+      </h1>
       <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6">
         {["New", "Top (24hr)", "Top (Week)", "Top (All Time)"].map((label) => (
           <button
