@@ -21,6 +21,8 @@ function App() {
       document.body.style.backgroundColor = "#2a3767";
     } else if (location.pathname === "/leaderboard") {
       document.body.style.backgroundColor = "#2a3767";
+    } else if (location.pathname === "/create") {
+      document.body.style.backgroundColor = "#2a3767";
     } else {
       document.body.style.backgroundColor = "#ffffff";
     }

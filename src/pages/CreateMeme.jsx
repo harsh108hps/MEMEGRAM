@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { firestore, storage } from "../../firebase-config";
 import { useAuth } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
+import { BsEmojiSunglasses } from "react-icons/bs";
 
 const CreateMeme = () => {
   const { user } = useAuth();
@@ -44,18 +45,18 @@ const CreateMeme = () => {
         "Me coding vs AI writing the same code in 5 seconds.",
         "When the code compiles, but deep down you know it shouldn't.",
         "It worked on my machine.",
-       "Code like nobody’s debugging.",
-     "Semicolon ruined my life... again.",
-     "I have a joke on recursion, but it’s too deep.", 
-    "99 little bugs in the code, take one down, patch it around… 127 bugs in the code.",
-    "Git commit -m 'final final FINAL version'",
-    "Real developers don’t comment, they whisper to the code.",
-    "Stack Overflow is my co-pilot.",
-    "While(true) { procrastinate(); }",
-     "I turn coffee into code… and bugs.",
-     "That moment when the code runs… but it really shouldn't.",
-     "Trust me, I’m a developer. (Famous last words)",
-     "404: Sleep not found",
+        "Code like nobody’s debugging.",
+        "Semicolon ruined my life... again.",
+        "I have a joke on recursion, but it’s too deep.",
+        "99 little bugs in the code, take one down, patch it around… 127 bugs in the code.",
+        "Git commit -m 'final final FINAL version'",
+        "Real developers don’t comment, they whisper to the code.",
+        "Stack Overflow is my co-pilot.",
+        "While(true) { procrastinate(); }",
+        "I turn coffee into code… and bugs.",
+        "That moment when the code runs… but it really shouldn't.",
+        "Trust me, I’m a developer. (Famous last words)",
+        "404: Sleep not found",
       ],
       funny: [
         "That one 'k' text ruining your whole week.",
@@ -66,18 +67,18 @@ const CreateMeme = () => {
         "POV: You opened Instagram for 2 mins... and now it's 3 hours later.",
         "Influencers be like: Just woke up 😌 (with full makeup and perfect lighting).",
         "When the filter is cute but you still look like a potato.",
-       " Brain: 1% ideas, 99% panic.",
-       " Why run? We’re all dying anyway.",
+        " Brain: 1% ideas, 99% panic.",
+        " Why run? We’re all dying anyway.",
         "Battery full. Will to live: low",
         "404: Motivation not found",
         "If sleep was a job, I’d be CEO",
-    "    Born to scroll, forced to work.",
-         "Currently training for a Netflix marathon.",
+        "    Born to scroll, forced to work.",
+        "Currently training for a Netflix marathon.",
         "My diet starts... after this snack.",
         " God’s still buffering my success.",
-       " Confidence level: selfie with no filter.",
+        " Confidence level: selfie with no filter.",
         "This meme is my therapy session.",
-        "Warning: May start dancing randomly."
+        "Warning: May start dancing randomly.",
       ],
       cat: [
         "My cat judging me like it pays rent.",
@@ -106,22 +107,21 @@ const CreateMeme = () => {
       "That feeling when your console.log solves more than Stack Overflow.",
       "Procrastinators unite… tomorrow.",
       "Me: I'll sleep early tonight. Also me at 3AM: Is SpongeBob a sea sponge or a kitchen one?",
-        "Adulting level: Cried because I dropped a taco.",
-       "Nothing haunts you like the pizza you didn’t eat.",
-       "Why do I spend 20 minutes picking a movie just to scroll on my phone the whole time?",
-       "Mood: buffering...",
-       "Brain.exe has stopped working",
-       "Too tired to function",
-        "When autocorrect ruins your life",
-        "Trust issues? I use public WiFi",
-       "Plot twist: I was the drama",
-        "Running on vibes and bad decisions",
-        "404: Motivation not found",
-        "Can’t. Busy doing nothing.",
-        "Spoiler alert: I survived",
-        "Reality? Hard pass.",
-        "I thought it was Friday"
-
+      "Adulting level: Cried because I dropped a taco.",
+      "Nothing haunts you like the pizza you didn’t eat.",
+      "Why do I spend 20 minutes picking a movie just to scroll on my phone the whole time?",
+      "Mood: buffering...",
+      "Brain.exe has stopped working",
+      "Too tired to function",
+      "When autocorrect ruins your life",
+      "Trust issues? I use public WiFi",
+      "Plot twist: I was the drama",
+      "Running on vibes and bad decisions",
+      "404: Motivation not found",
+      "Can’t. Busy doing nothing.",
+      "Spoiler alert: I survived",
+      "Reality? Hard pass.",
+      "I thought it was Friday",
     ];
     const tags = tagsInput
       .toLowerCase()
@@ -193,8 +193,13 @@ const CreateMeme = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">🧠 Meme Creation Studio</h2>
+    <div className="max-w-4xl mx-auto p-4 bg-[#f8f5f0] m-4 rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-4 flex items-center space-x-2">
+        <span className="text-yellow-500 zoom-in-out">
+          <BsEmojiSunglasses size={28} />
+        </span>
+        <span>Meme Creation Studio 📽️</span>
+      </h2>
 
       <div className="grid md:grid-cols-2 gap-6">
         <div>
@@ -213,7 +218,7 @@ const CreateMeme = () => {
               value={imageUrlInput}
               onChange={(e) => setImageUrlInput(e.target.value)}
               placeholder="https://example.com/meme.jpg"
-              className="flex-1 p-2 border rounded"
+              className="flex-1 p-2 border rounded bg-gray-100  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
             />
             <button
               onClick={handleImageUrlInput}
@@ -228,7 +233,7 @@ const CreateMeme = () => {
             type="text"
             value={topText}
             onChange={(e) => setTopText(e.target.value)}
-            className="w-full p-2 border rounded mb-2"
+            className="w-full p-2 border rounded mb-2 bg-gray-100  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
           />
 
           <label className="block font-medium">Bottom Text</label>
@@ -236,7 +241,7 @@ const CreateMeme = () => {
             type="text"
             value={bottomText}
             onChange={(e) => setBottomText(e.target.value)}
-            className="w-full p-2 border rounded mb-2"
+            className="w-full p-2 border rounded mb-2 bg-gray-100  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
           />
 
           <div className="flex space-x-2 mb-2">
@@ -245,7 +250,7 @@ const CreateMeme = () => {
               type="number"
               value={fontSize}
               onChange={(e) => setFontSize(Number(e.target.value))}
-              className="w-20 p-1 border rounded"
+              className="w-20 p-1 border rounded bg-gray-100  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
             />
           </div>
 
@@ -258,12 +263,12 @@ const CreateMeme = () => {
             />
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4  ">
             <label className="block font-medium">Text Alignment</label>
             <select
               value={alignment}
               onChange={(e) => setAlignment(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
             >
               <option value="left">Left</option>
               <option value="center">Center</option>
@@ -278,7 +283,7 @@ const CreateMeme = () => {
               value={tagsInput}
               onChange={(e) => setTagsInput(e.target.value)}
               placeholder="#funny, #relatable, #coding"
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded bg-gray-100  focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
             />
           </div>
 
@@ -290,7 +295,9 @@ const CreateMeme = () => {
               Generate AI Caption
             </button>
             {suggestedCaption && (
-              <p className="mt-2 text-gray-700 italic">💡 {suggestedCaption}</p>
+              <p className="mt-2 text-gray-900 italic ">
+                💡 {suggestedCaption}
+              </p>
             )}
           </div>
 
@@ -303,7 +310,7 @@ const CreateMeme = () => {
         </div>
 
         {/* Preview */}
-        <div className="relative border border-gray-300 p-2 bg-white rounded">
+        <div className="relative border border-gray-400 p-2 bg-gray-100 rounded">
           {image ? (
             <div className="w-full relative">
               <img src={image} alt="Meme preview" className="w-full rounded" />

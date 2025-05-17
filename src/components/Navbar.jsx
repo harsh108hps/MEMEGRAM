@@ -6,6 +6,7 @@ import LoginModal from "./LoginModal";
 import { auth } from "../../firebase-config";
 import RegisterModal from "./RegisterModal";
 import { useAuth } from "../contexts/AuthContext";
+import { ImGrin } from "react-icons/im";
 const Navbar = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const Navbar = () => {
     localStorage.removeItem("viewedMemes");
     navigate("/");
   };
+
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
@@ -27,7 +29,10 @@ const Navbar = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex-shrink-0 text-xl font-bold text-pink-500">
-              <Link to="/">🧠 MemeGram</Link>
+              <Link to="/" className="flex items-center space-x-2">
+                <ImGrin className="spin-slow text-yellow-600 text-2xl" />
+                <span>MemeGram</span>
+              </Link>
             </div>
 
             {/* Desktop Links */}
@@ -94,8 +99,10 @@ const Navbar = () => {
               {user ? (
                 <>
                   <span className="text-sm text-gray-300 hidden sm:inline">
-                    👋 {user.displayName || user.email}
+                    <span className="wave-hello inline-block mr-1">👋</span>
+                    {user.displayName || user.email}
                   </span>
+
                   <button
                     onClick={handleLogout}
                     className="bg-pink-500 hover:bg-pink-600 text-black px-3 py-1 rounded text-sm"
