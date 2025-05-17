@@ -115,32 +115,28 @@ memegram/
 │   ├── components/                 # Reusable UI components
 │   │   ├── Navbar.jsx
 │   │   ├── MemeCard.jsx
-│   │   ├── MemeStats.jsx
+│   │   ├── ContentBody.jsx
 │   │   ├── MemeOfTheDay.jsx
-│   │   ├── Leaderboard.jsx
+│   │   ├── Footer.jsx
 │   │   ├── RegisterModal.jsx
-│   │   ├── CommentBox.jsx
-│   │   └── FireBadge.jsx
+│   │   └── EmojiFeatureSection.jsx
+         
 │
 │   ├── pages/                      # Route-level pages
 │   │   ├── Home.jsx
 │   │   ├── Feed.jsx
 │   │   ├── CreateMeme.jsx
-│   │   ├── Profile.jsx
-│   │   ├── LeaderboardPage.jsx
-│   │   ├── CricketMemes.jsx        # Special: Cricket Corner
-│   │   └── NotFound.jsx
+│   │   ├── NotFound.jsx
+│   │   ├── Leaderboard.jsx
+│   │   ├── CrateMeme.jsx       
+│   │   └── Dashboard.jsx
 │
-│   ├── contexts/                   # Global contexts (Auth, Theme, etc.)
+│   ├── contexts/                 
 │   │   ├── AuthContext.jsx
-│   │   └── MemeContext.jsx
+
 │
-│   ├── utils/                      # Utility functions & helpers
-│   │   ├── firebase.js             # Firebase config & exports
-│   │   ├── memeUtils.js            # Caption generator, sorting, etc.
-│   │   └── aiCaptionGenerator.js   # Optional: OpenAI integration
 │
-│   ├── styles/                     # Optional: Custom CSS or Tailwind extensions
+│   ├── styles/                    
 │   │   └── tailwind.css
 │
 │   ├── App.jsx                     # Main app layout + routes
@@ -149,8 +145,6 @@ memegram/
 │
 ├── .env                            # Firebase keys (NEVER push to GitHub)
 ├── .gitignore
-├── tailwind.config.js
-├── postcss.config.js
 ├── package.json
 └── README.md                       # Project overview
 ```
