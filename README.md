@@ -1,12 +1,163 @@
-# React + Vite
+# 🎭 MemeGram - The Internet’s Playground for Memes
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🌐 Live Demo
+Coming soon...
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🧠 Project Overview
 
-## Expanding the ESLint configuration
+Memes aren't just internet jokes — they are *cultural currency*. MemeGram is a **next-gen meme-sharing platform** where users can:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 🎨 Create hilarious memes using a built-in studio  
+- 🤖 Get AI-powered caption suggestions and auto-tagging  
+- 📈 Track meme performance over time  
+- 🔥 Explore trending content, vote, comment, and share  
+- 🏆 Unlock badges and climb weekly leaderboards  
+
+---
+
+## 🚀 Key Features
+
+### 🧩 1. Meme Creation Studio
+
+- Upload images or select from built-in templates  
+- Add customizable top/bottom text with live preview  
+- Choose font style, size, color, alignment  
+- AI-powered caption generation based on image/text  
+- Save as draft or publish to public feed  
+
+### 💬 2. Voting, Commenting & Tagging
+
+- Like / Dislike system (🔥 fire emoji + animation)  
+- 140-character comment support  
+- Content reporting/flagging for moderation  
+- Manual & AI-based auto-tagging (e.g., #cricket, #relatable)  
+
+### 📥 3. Meme Feed & Search
+
+- Tabbed feed views:  
+  - 🆕 New  
+  - 📈 Top (24h, Week, All Time)  
+- Search by hashtags or caption keywords  
+- Filter by tags or creators  
+- Infinite scroll support  
+
+### 📊 4. Meme Performance Analytics
+
+- 👁️ View counter  
+- ❤️ Likes, 💔 Dislikes  
+- ⏱️ Time since publication  
+- 📉 (Optional) Trendline of engagement  
+
+### 👤 5. User Dashboard
+
+- Profile avatars via Firebase Storage  
+- View and manage personal memes  
+- Stats: Total likes, views, comments  
+- Preview of most-liked meme  
+- Edit/delete posts  
+- Meme sorting (date, popularity)  
+
+### 🏆 6. Competitive Edge
+
+- **🔥 Meme of the Day**: Top net-voted meme in last 24h  
+- **📈 Leaderboard**: Weekly top creators based on stats  
+- **🥇 Badges**:  
+  - First Post  
+  - Weekly Winner  
+  - 10k Views Club  
+  - 100 Likes Champion  
+
+### 🧪 7. Bonus Features (Optional)
+
+- ⏰ Meme Scheduling: Drop memes at peak times  
+- 🤖 Personalized feed based on past interactions  
+- 🛡️ Admin moderation dashboard  
+
+---
+
+## 🧑‍💻 Technologies Used
+
+### 🖥️ Frontend
+
+- **React.js** + **Vite** for fast SPA  
+- **Tailwind CSS** for utility-first styling  
+- **Shadcn/UI** for clean, accessible UI components  
+- **Lucide Icons** for crisp vector icons  
+- **Framer Motion** for animations  
+- **React Router Dom** for navigation  
+- **React Toastify** for toast notifications  
+
+### 🔥 Backend & Services
+
+- **Firebase Firestore** – Real-time database (posts, users, comments)  
+- **Firebase Auth** – Secure user login/signup  
+- **Firebase Storage** – Image uploads (memes, avatars)  
+- **OpenAI API** (optional) – AI caption generator   
+
+---
+
+## 🧭 Folder Structure
+memegram/
+│
+├── public/                         # Static files
+│   ├── index.html                  # HTML template
+│   └── favicon.ico
+│
+├── src/
+│   ├── assets/                     # Images, icons, and static assets
+│   │   ├── logo.png
+│   │   ├── meme-templates/
+│   │   └── avatars/
+│
+│   ├── components/                 # Reusable UI components
+│   │   ├── Navbar.jsx
+│   │   ├── MemeCard.jsx
+│   │   ├── MemeStats.jsx
+│   │   ├── MemeOfTheDay.jsx
+│   │   ├── Leaderboard.jsx
+│   │   ├── RegisterModal.jsx
+│   │   ├── CommentBox.jsx
+│   │   └── FireBadge.jsx
+│
+│   ├── pages/                      # Route-level pages
+│   │   ├── Home.jsx
+│   │   ├── Feed.jsx
+│   │   ├── CreateMeme.jsx
+│   │   ├── Profile.jsx
+│   │   ├── LeaderboardPage.jsx
+│   │   ├── CricketMemes.jsx        # Special: Cricket Corner
+│   │   └── NotFound.jsx
+│
+│   ├── contexts/                   # Global contexts (Auth, Theme, etc.)
+│   │   ├── AuthContext.jsx
+│   │   └── MemeContext.jsx
+│
+│   ├── utils/                      # Utility functions & helpers
+│   │   ├── firebase.js             # Firebase config & exports
+│   │   ├── memeUtils.js            # Caption generator, sorting, etc.
+│   │   └── aiCaptionGenerator.js   # Optional: OpenAI integration
+│
+│   ├── styles/                     # Optional: Custom CSS or Tailwind extensions
+│   │   └── tailwind.css
+│
+│   ├── App.jsx                     # Main app layout + routes
+│   ├── main.jsx                    # ReactDOM entry point
+│   └── index.css                   # Tailwind base styling
+│
+├── .env                            # Firebase keys (NEVER push to GitHub)
+├── .gitignore
+├── tailwind.config.js
+├── postcss.config.js
+├── package.json
+└── README.md                       # Project overview
+
+## 👨‍💻 Authors
+
+| Name                | Email                                  | LinkedIn                              |
+|---------------------|----------------------------------------|----------------------------------------|
+| Harsh Pratap Singh  | harshpratapsingh39900@gmail.com         | [LinkedIn](https://www.linkedin.com/)in/  (fsd25_05006/Masai Student Code/) |
+| Rabinarayan Sahoo   | rabinarayansahoo9658@gmail.com          | [LinkedIn](https://www.linkedin.com/in/)(fsd25_05040/Masai Student Code/)  |
+
+## 📸 Screenshots
