@@ -99,59 +99,8 @@ Memes aren't just internet jokes — they are *cultural currency*. MemeGram is a
 ---
 
 ## 🧭 Folder Structure
-memegram/
-│
-├── public/                         # Static files
-│   ├── index.html                  # HTML template
-│   └── favicon.ico
-│
-├── src/
-│   ├── assets/                     # Images, icons, and static assets
-│   │   ├── logo.png
-│   │   ├── meme-templates/
-│   │   └── avatars/
-│
-│   ├── components/                 # Reusable UI components
-│   │   ├── Navbar.jsx
-│   │   ├── MemeCard.jsx
-│   │   ├── MemeStats.jsx
-│   │   ├── MemeOfTheDay.jsx
-│   │   ├── Leaderboard.jsx
-│   │   ├── RegisterModal.jsx
-│   │   ├── CommentBox.jsx
-│   │   └── FireBadge.jsx
-│
-│   ├── pages/                      # Route-level pages
-│   │   ├── Home.jsx
-│   │   ├── Feed.jsx
-│   │   ├── CreateMeme.jsx
-│   │   ├── Profile.jsx
-│   │   ├── LeaderboardPage.jsx
-│   │   ├── CricketMemes.jsx        # Special: Cricket Corner
-│   │   └── NotFound.jsx
-│
-│   ├── contexts/                   # Global contexts (Auth, Theme, etc.)
-│   │   ├── AuthContext.jsx
-│   │   └── MemeContext.jsx
-│
-│   ├── utils/                      # Utility functions & helpers
-│   │   ├── firebase.js             # Firebase config & exports
-│   │   ├── memeUtils.js            # Caption generator, sorting, etc.
-│   │   └── aiCaptionGenerator.js   # Optional: OpenAI integration
-│
-│   ├── styles/                     # Optional: Custom CSS or Tailwind extensions
-│   │   └── tailwind.css
-│
-│   ├── App.jsx                     # Main app layout + routes
-│   ├── main.jsx                    # ReactDOM entry point
-│   └── index.css                   # Tailwind base styling
-│
-├── .env                            # Firebase keys (NEVER push to GitHub)
-├── .gitignore
-├── tailwind.config.js
-├── postcss.config.js
-├── package.json
-└── README.md                       # Project overview
+
+<pre> memegram/ ├── public/ ├── src/ │ ├── assets/ # Images, avatars, templates │ ├── components/ # Reusable UI components (Navbar, MemeCard, etc.) │ ├── pages/ # Route-level pages (Home, Feed, CreateMeme) │ ├── contexts/ # React context providers (Auth, MemeContext) │ ├── utils/ # firebase.js, AI caption logic, helpers │ ├── styles/ # Tailwind/custom CSS (if needed) │ ├── App.jsx # Root component │ └── main.jsx # Entry point ├── .env # Firebase/API keys ├── tailwind.config.js ├── package.json └── README.md </pre> 
 
 ## 👨‍💻 Authors
 
