@@ -14,6 +14,7 @@ const Navbar = () => {
   const [showRegister, setShowRegister] = useState(false);
   const handleLogout = async () => {
     await signOut(auth);
+    localStorage.removeItem("viewedMemes");
     navigate("/");
   };
   const toggleMenu = () => {

@@ -17,27 +17,32 @@ const Leaderboard = () => {
         (meme) => meme.createdAt?.seconds * 1000 >= oneWeekAgo
       );
 
-      const userLikesMap = {};
+      const userStatsMap = {};
 
       recentMemes.forEach((meme) => {
         const upvotes = meme.likes || 0;
-        if (!userLikesMap[meme.userId]) {
-          userLikesMap[meme.userId] = {
+        const views = meme.views || 0;
+
+        if (!userStatsMap[meme.userId]) {
+          userStatsMap[meme.userId] = {
             totalLikes: 0,
+            totalViews: 0,
             memes: 0,
             userName: meme.userName || "Anonymous",
           };
         }
 
-        userLikesMap[meme.userId].totalLikes += upvotes;
-        userLikesMap[meme.userId].memes += 1;
+        userStatsMap[meme.userId].totalLikes += upvotes;
+        userStatsMap[meme.userId].totalViews += views;
+        userStatsMap[meme.userId].memes += 1;
       });
 
-      const ranked = Object.entries(userLikesMap)
+      const ranked = Object.entries(userStatsMap)
         .map(([uid, data]) => ({
           uid,
           userName: data.userName,
           totalLikes: data.totalLikes,
+          totalViews: data.totalViews,
           memeCount: data.memes,
         }))
         .sort((a, b) => b.totalLikes - a.totalLikes);
@@ -47,7 +52,6 @@ const Leaderboard = () => {
 
     fetchLeaderboard();
   }, []);
-
   return (
     <div className="max-w-4xl mx-auto p-6 mt-8 mb-8 bg-white shadow-md rounded-lg">
       <h2 className="text-3xl font-bold mb-6 text-center">
@@ -66,19 +70,39 @@ const Leaderboard = () => {
                 <th className="p-3">User</th>
                 <th className="p-3">User ID</th>
                 <th className="p-3">Total Likes</th>
+                <th className="p-3">Total Views</th>
                 <th className="p-3">Memes Posted</th>
               </tr>
             </thead>
             <tbody>
-              {leaderboardData.map((user, index) => (
-                <tr key={user.uid} className="border-b">
-                  <td className="p-3 font-semibold">#{index + 1}</td>
-                  <td className="p-3">{user.userName}</td>
-                  <td className="p-3">{user.uid}</td>
-                  <td className="p-3">{user.totalLikes}</td>
-                  <td className="p-3">{user.memeCount}</td>
-                </tr>
-              ))}
+              {leaderboardData.map((user, index) => {
+                // Extract first two characters of username (uppercase)
+                const initials = (user.userName || "AN")
+                  .slice(0, 2)
+                  .toUpperCase();
+
+                return (
+                  <tr key={user.uid} className="border-b">
+                    <td className="p-3 font-semibold">#{index + 1}</td>
+                    {/* User cell with circle initials */}
+                    <td className="p-3 flex items-center space-x-3">
+                      {/* Circle with initials */}
+                      <div
+                        className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold"
+                        title={user.userName} // Tooltip on hover
+                      >
+                        {initials}
+                      </div>
+                      {/* Username */}
+                      <span>{user.userName}</span>
+                    </td>
+                    <td className="p-3">{user.uid}</td>
+                    <td className="p-3">{user.totalLikes}</td>
+                    <td className="p-3">{user.totalViews}</td>
+                    <td className="p-3">{user.memeCount}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

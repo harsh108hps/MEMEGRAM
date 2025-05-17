@@ -12,6 +12,7 @@ import { firestore, auth } from "../../firebase-config";
 import { useAuth } from "../contexts/AuthContext";
 import EditModal from "../components/EditModal";
 import { m } from "framer-motion";
+import UserAchievements from "../components/UserAchievements";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -25,7 +26,7 @@ const Dashboard = () => {
   const [filterTag, setFilterTag] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
-  const memesPerPage = 5;
+  const memesPerPage = 4;
   const [editingMeme, setEditingMeme] = useState(null);
   const [editForm, setEditForm] = useState({
     suggestedCaption: "",
@@ -100,23 +101,45 @@ const Dashboard = () => {
     fetchMemes();
   }, [user]);
 
+  // Smooth scroll to top when page changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
+
+  // Reset to first page when filters or search query change
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, filterTag]);
+
   const handleDelete = async (id) => {
     await deleteDoc(doc(firestore, "memes", id));
     setMyMemes((prev) => prev.filter((meme) => meme.id !== id));
   };
 
-  const getBadges = (meme) => {
-    const badges = [];
+  // const getBadges = (meme) => {
+  //   console.log(meme);
+  //   const badges = [];
+  //   const upvotes = meme.likes || 0;
+  //   const downvotes = meme.dislikes || 0;
+  //   const views = meme.views || 0;
+
+  //   if (upvotes < 10) return [];
+  //   if (upvotes >= 10) badges.push("🏅 10 Likes Club");
+  //   if (views >= 100) badges.push("🎖 100 Views Club");
+  //   if (upvotes - downvotes >= 50) badges.push("🔥 Viral Post");
+
+  //   return badges;
+  // };
+
+  const getBadge = (meme) => {
     const upvotes = meme.likes || 0;
     const downvotes = meme.dislikes || 0;
     const views = meme.views || 0;
 
-    if (upvotes < 10) return [];
-    if (upvotes >= 10) badges.push("🏅 10 Likes Club");
-    if (views >= 10000) badges.push("🎖 10k Views Club");
-    if (upvotes - downvotes >= 50) badges.push("🔥 Viral Post");
-
-    return badges;
+    if (upvotes - downvotes >= 50) return "🔥 Viral Post";
+    if (views >= 100) return "🎖 100 Views Club";
+    if (upvotes >= 10) return "🏅 10 Likes Club";
+    return null;
   };
 
   const filteredMemes = myMemes.filter(
@@ -147,7 +170,7 @@ const Dashboard = () => {
       <h2 className="text-4xl font-extrabold mb-8 text-center text-blue-700">
         📊 My Meme Dashboard
       </h2>
-
+      <UserAchievements memes={myMemes} />
       {loading ? (
         <p className="text-center text-lg font-medium text-gray-600">
           Loading...
@@ -163,18 +186,6 @@ const Dashboard = () => {
             </div>
           )}
 
-          {leaderboard.length > 0 && (
-            <div className="bg-blue-100 border-l-8 border-blue-500 p-5 mb-8 rounded-xl shadow">
-              <h3 className="text-2xl font-bold mb-3">🏆 Weekly Leaderboard</h3>
-              <ol className="list-decimal list-inside space-y-1 text-blue-800">
-                {leaderboard.slice(0, 5).map((entry, index) => (
-                  <li key={index}>
-                    {entry.uid} - {entry.score} pts
-                  </li>
-                ))}
-              </ol>
-            </div>
-          )}
           <div className="flex justify-between mb-4">
             <select
               className="border rounded p-2 text-sm"
@@ -234,21 +245,23 @@ const Dashboard = () => {
                   </div>
 
                   <div className="absolute right-0 top-0 flex flex-col lg:flex-row gap-2 mt-2 mr-2">
-                    {getBadges(meme).map((badge, i) => {
+                    {(() => {
+                      const badge = getBadge(meme);
+                      if (!badge) return null;
                       const isTenLikesClub = badge.includes("10 Likes Club");
+
                       return (
                         <span
-                          key={i}
-                          className={`px-3 py-1 rounded-full font-semibold shadow-lg transition-all duration-300 text-sm ${
+                          className={`px-3 py-1 rounded-full font-semibold shadow-lg transition-all duration-300 text-sm animate-bounce ${
                             isTenLikesClub
-                              ? "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border border-yellow-600 scale-105 animate-bounce"
+                              ? "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border border-yellow-600 scale-105"
                               : "bg-yellow-100 text-yellow-800"
                           }`}
                         >
                           {badge}
                         </span>
                       );
-                    })}
+                    })()}
                   </div>
 
                   <div className="mt-4 flex gap-4">
@@ -269,6 +282,45 @@ const Dashboard = () => {
               </div>
             </div>
           ))}
+          {/* Pagination Controls - only show if there are multiple pages */}
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-6 space-x-2">
+              {/* Prev Button */}
+              <button
+                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                disabled={page === 1}
+                className="px-4 py-2 bg-blue-100 text-blue-800 font-semibold rounded disabled:opacity-50"
+              >
+                ◀ Prev
+              </button>
+
+              {/* Page Numbers */}
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPage(i + 1)}
+                  className={`px-4 py-2 rounded font-semibold ${
+                    page === i + 1
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-800"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              {/* Next Button */}
+              <button
+                onClick={() =>
+                  setPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={page === totalPages}
+                className="px-4 py-2 bg-blue-100 text-blue-800 font-semibold rounded disabled:opacity-50"
+              >
+                Next ▶
+              </button>
+            </div>
+          )}
         </>
       )}
       <EditModal

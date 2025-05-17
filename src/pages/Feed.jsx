@@ -30,6 +30,57 @@ const Feed = () => {
 
   const [currentCommentIndex, setCurrentCommentIndex] = useState(0);
 
+  //View Count
+  useEffect(() => {
+    // When user changes (login or logout), reset viewed state
+    // Clear localStorage for viewed memes if you want (especially on logout)
+    localStorage.removeItem("viewedMemes");
+
+    // Reset the viewLogged flags in the memes state so next user can increment views again
+    setMemes((prev) =>
+      prev.map((meme) => ({
+        ...meme,
+        viewLogged: false,
+      }))
+    );
+  }, [user]);
+
+  useEffect(() => {
+    const logView = async () => {
+      const currentMeme = memes[currentIndex];
+      if (!currentMeme) return;
+
+      // Read viewed memes from localStorage
+      const viewedMemes = JSON.parse(
+        localStorage.getItem("viewedMemes") || "[]"
+      );
+
+      if (viewedMemes.includes(currentMeme.id)) return; // Already viewed by this user
+
+      try {
+        const memeRef = doc(firestore, "memes", currentMeme.id);
+        await updateDoc(memeRef, { views: increment(1) });
+
+        viewedMemes.push(currentMeme.id);
+        localStorage.setItem("viewedMemes", JSON.stringify(viewedMemes));
+
+        setMemes((prev) =>
+          prev.map((meme, idx) =>
+            idx === currentIndex
+              ? { ...meme, views: (meme.views || 0) + 1, viewLogged: true }
+              : meme
+          )
+        );
+      } catch (error) {
+        console.error("Error logging view:", error);
+      }
+    };
+
+    if (memes[currentIndex]) {
+      logView();
+    }
+  }, [currentIndex]);
+
   useEffect(() => {
     const fetchMemes = async () => {
       const querySnapshot = await getDocs(collection(firestore, "memes"));
@@ -245,6 +296,9 @@ const Feed = () => {
               >
                 👎 {currentMeme.dislikes}
               </button>
+              <div className="bg-red-100 px-3 py-1 rounded-full text-sm text-black mb-2 mt-1">
+                👁️ {currentMeme.views || 0}
+              </div>
               <button
                 onClick={async () => {
                   const url = `${window.location.origin}/feed?id=${currentMeme.id}`;
