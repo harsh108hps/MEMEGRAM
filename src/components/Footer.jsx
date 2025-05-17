@@ -65,8 +65,14 @@ const Footer = () => {
                 target="_blank"
                 className="hover:text-pink-500"
               >
-                <Instagram size={20} />
+                <span className="spark-container">
+                  <Instagram size={20} />
+                  <span className="spark"></span>
+                  <span className="spark"></span>
+                  <span className="spark"></span>
+                </span>
               </a>
+
               <a
                 href="https://www.twitter.com"
                 target="_blank"
@@ -77,14 +83,24 @@ const Footer = () => {
               <a
                 href="https://www.youtube.com"
                 target="_blank"
-                className="hover:text-pink-500"
+                className="relative hover:text-pink-500"
               >
-                <Youtube size={20} />
+                <span className="animate-spin-pause text-blue-500">
+                  <Youtube size={20} />
+                  {/* Sparks */}
+                  <span className="spark-burst"></span>
+                  <span className="spark-burst"></span>
+                  <span className="spark-burst"></span>
+                  <span className="spark-burst"></span>
+                  <span className="spark-burst"></span>
+                  <span className="spark-burst"></span>
+                  <span className="spark-burst"></span>
+                  <span className="spark-burst"></span>
+                </span>
               </a>
             </div>
           </div>
         </div>
-
         <div className="mt-10 text-center text-xs text-gray-500 border-t border-gray-700 pt-4">
           &copy; {new Date().getFullYear()} MEMEGRAM. All rights reserved.
         </div>

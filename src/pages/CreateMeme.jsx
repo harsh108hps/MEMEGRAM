@@ -6,6 +6,7 @@ import { firestore, storage } from "../../firebase-config";
 import { useAuth } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 import { BsEmojiSunglasses } from "react-icons/bs";
+import { BiSolidCameraMovie } from "react-icons/bi";
 
 const CreateMeme = () => {
   const { user } = useAuth();
@@ -196,9 +197,14 @@ const CreateMeme = () => {
     <div className="max-w-4xl mx-auto p-4 bg-[#f8f5f0] m-4 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4 flex items-center space-x-2">
         <span className="text-yellow-500 zoom-in-out">
-          <BsEmojiSunglasses size={28} />
+          {/* <BsEmojiSunglasses size={28} /> */}
         </span>
-        <span>Meme Creation Studio 📽️</span>
+        <span className="flex items-center space-x-1">
+          <span className="animate-flip text-purple-600">
+            <BiSolidCameraMovie size={24} />
+          </span>
+          <span>Meme Creation Studio</span>
+        </span>
       </h2>
 
       <div className="grid md:grid-cols-2 gap-6">

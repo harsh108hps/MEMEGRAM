@@ -167,7 +167,7 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-gradient-to-br from-white via-blue-50 to-white rounded-xl shadow-lg">
-      <h2 className="text-4xl font-extrabold mb-8 text-center text-blue-700">
+      <h2 className="text-4xl font-extrabold mb-8 text-center text-black">
         📊 My Meme Dashboard
       </h2>
       <UserAchievements memes={myMemes} />
