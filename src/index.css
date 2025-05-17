@@ -18,26 +18,75 @@ html {
   scrollbar-color: #e53888 #1f2937;
   scrollbar-width: thin;
 }
-
-@keyframes slideUp {
+@keyframes slide {
   0% {
-    transform: translateY(100%) translateX(100%);
+    transform: translateY(0);
   }
   100% {
-    transform: translateY(-100%) translateX(100%);
+    transform: translateY(-100px);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }
 
 .animate-slide {
-  animation: slideUp linear infinite;
+  animation: slide 5s ease-in-out infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1s ease-in-out infinite;
 }
 
 .animate-run {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  gap: 10px;
-  flex-direction: column;
-  pointer-events: none;
+  animation: slide 5s ease-in-out infinite;
+}
+/* Marquee scroll animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Blinking effect */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Custom marquee class */
+.animate-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 15s linear infinite, blink 2s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Pause marquee on hover */
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Responsive font sizing */
+@media (max-width: 768px) {
+  .animate-marquee {
+    font-size: 0.75rem; /* text-sm */
+  }
 }

@@ -84,7 +84,7 @@ const Feed = () => {
         ...prev,
         { emoji: randomEmoji, id: Date.now() + Math.random() },
       ]);
-    }, 400); // Adds new emoji every 300ms
+    }, 800); // Adds new emoji every 300ms
 
     return () => clearInterval(interval); // Clean up the interval on component unmount
   }, []);
