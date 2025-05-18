@@ -159,3 +159,15 @@ memegram/
 ## 📸 Screenshots 
 #### 🧩 Home View
 ![Home Screenshot](src/assets/images/Home.png)
+#### Footer View
+![Footer Screenshot](src/assets/images/footer.png)
+#### Dashboard View
+![Dashboard Screenshot](src/assets/images/dashboard.png)
+#### Feed View
+![Feed Screenshot](src/assets/images/feed.png)
+#### MemeoftheDay View
+![MemeoftheDay Screenshot](src/assets/images/memeoftheday.png)
+#### Leaderboard View
+![Leaderboard Screenshot](src/assets/images/leaderboard.png)
+#### Features View
+![Features Screenshot](src/assets/images/Features.png)
