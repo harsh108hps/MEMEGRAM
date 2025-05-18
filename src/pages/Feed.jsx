@@ -14,6 +14,7 @@ import { MdOutlineArrowBackIos } from "react-icons/md";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 import { toast } from "react-toastify";
 import { useSearchParams } from "react-router-dom";
+
 const Feed = () => {
   const { user } = useAuth();
   const [memes, setMemes] = useState([]);
@@ -417,6 +418,7 @@ const Feed = () => {
       ) : (
         <p className="text-center text-gray-500">No memes available</p>
       )}
+
       {/* Emoji Animation */}
       <div className="absolute bottom-0 right-0 flex gap-4 items-center animate-run animate-bounce z-50">
         {emojis.map((emoji) => (

@@ -35,8 +35,9 @@ const ContentBody = () => {
       {/* Hero Section */}
       <section className="bg-pink-100 py-20 text-center">
         <h1 className="text-4xl md:text-5xl font-bold text-pink-600">
-          Create. Laugh. Go Viral.
+          <span className="loop-typewriter">Create. Laugh. Go Viral.</span>
         </h1>
+
         <p className="mt-4 text-lg text-gray-700">
           The Internet’s Playground for Memes — powered by creativity and
           community.

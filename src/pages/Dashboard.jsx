@@ -13,6 +13,7 @@ import { useAuth } from "../contexts/AuthContext";
 import EditModal from "../components/EditModal";
 import { m } from "framer-motion";
 import UserAchievements from "../components/UserAchievements";
+import MemeStatsChart from "../components/MemeStatsChart";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -36,6 +37,7 @@ const Dashboard = () => {
     fontColor: "",
     fontSize: 0,
   });
+  const [viewingStatsMeme, setViewingStatsMeme] = useState(null);
 
   const handleEditClick = (meme) => {
     setEditingMeme(meme);
@@ -116,21 +118,6 @@ const Dashboard = () => {
     setMyMemes((prev) => prev.filter((meme) => meme.id !== id));
   };
 
-  // const getBadges = (meme) => {
-  //   console.log(meme);
-  //   const badges = [];
-  //   const upvotes = meme.likes || 0;
-  //   const downvotes = meme.dislikes || 0;
-  //   const views = meme.views || 0;
-
-  //   if (upvotes < 10) return [];
-  //   if (upvotes >= 10) badges.push("🏅 10 Likes Club");
-  //   if (views >= 100) badges.push("🎖 100 Views Club");
-  //   if (upvotes - downvotes >= 50) badges.push("🔥 Viral Post");
-
-  //   return badges;
-  // };
-
   const getBadge = (meme) => {
     const upvotes = meme.likes || 0;
     const downvotes = meme.dislikes || 0;
@@ -142,12 +129,18 @@ const Dashboard = () => {
     return null;
   };
 
-  const filteredMemes = myMemes.filter(
-    (meme) =>
-      (!filterTag || meme.tags?.includes(filterTag)) &&
-      (!searchQuery ||
-        meme.caption?.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredMemes = myMemes.filter((meme) => {
+    const matchesTag = !filterTag || meme.tags?.includes(filterTag);
+    const query = searchQuery.toLowerCase();
+
+    const matchesSearch =
+      !searchQuery ||
+      meme.caption?.toLowerCase().includes(query) ||
+      meme.suggestedCaption?.toLowerCase().includes(query) ||
+      meme.tags?.some((tag) => tag.toLowerCase().includes(query));
+
+    return matchesTag && matchesSearch;
+  });
 
   const sortedMemes = [...filteredMemes].sort((a, b) => {
     if (sortType === "likes") {
@@ -164,6 +157,26 @@ const Dashboard = () => {
     (page - 1) * memesPerPage,
     page * memesPerPage
   );
+
+  if (viewingStatsMeme) {
+    return (
+      <div className="max-w-3xl mx-auto p-6 text-center bg-white rounded-xl shadow-lg">
+        <h2 className="text-3xl font-extrabold mb-4 text-black">
+          📊 Meme Stats
+        </h2>
+        <p className="text-lg font-medium mb-2 text-gray-700">
+          {viewingStatsMeme.suggestedCaption}
+        </p>
+        <MemeStatsChart meme={viewingStatsMeme} />
+        <button
+          onClick={() => setViewingStatsMeme(null)}
+          className="mt-6 bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded-lg font-semibold shadow"
+        >
+          🔙 Back to Dashboard
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-gradient-to-br from-white via-blue-50 to-white rounded-xl shadow-lg">
@@ -186,7 +199,7 @@ const Dashboard = () => {
             </div>
           )}
 
-          <div className="flex justify-between mb-4">
+          <div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-4">
             <select
               className="border rounded p-2 text-sm"
               value={sortType}
@@ -195,7 +208,16 @@ const Dashboard = () => {
               <option value="date">Sort by Date</option>
               <option value="likes">Sort by Likes</option>
             </select>
+
+            <input
+              type="text"
+              placeholder="Search by tag or caption..."
+              className="border rounded p-2 text-sm flex-grow"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
+
           {paginatedMemes.map((meme) => (
             <div
               key={meme.id}
@@ -276,6 +298,12 @@ const Dashboard = () => {
                       onClick={() => handleDelete(meme.id)}
                     >
                       🗑 Delete
+                    </button>
+                    <button
+                      className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow"
+                      onClick={() => setViewingStatsMeme(meme)}
+                    >
+                      📈 View Stats
                     </button>
                   </div>
                 </div>

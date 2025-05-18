@@ -325,3 +325,83 @@ html {
   --x: -21px;
   --y: -21px;
 }
+@keyframes typewriterLoop {
+  0%,
+  10% {
+    width: 0;
+  }
+  40%,
+  60% {
+    width: 100%;
+  }
+  90%,
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes blinkCursor {
+  0%,
+  100% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: black;
+  }
+}
+
+.loop-typewriter {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid black;
+  animation: typewriterLoop 4s steps(22) infinite,
+    blinkCursor 0.7s step-end infinite;
+  width: 0;
+  max-width: fit-content;
+  line-height: 1.2;
+  padding-bottom: 4px; /* Prevents cutting off 'g' */
+  font-family: monospace;
+}
+
+/* Media Query for Small Screens (Mobile and smaller tablets) */
+@media (max-width: 768px) {
+  .loop-typewriter {
+    font-size: 1.5rem; /* Smaller font size for smaller screens */
+    width: 90%; /* Adjust width to avoid overflow */
+    padding-bottom: 2px; /* Adjust padding */
+  }
+}
+
+/* Media Query for very small screens (Mobile Portrait) */
+@media (max-width: 480px) {
+  .loop-typewriter {
+    font-size: 1.25rem; /* Even smaller font for very small screens */
+    width: 100%; /* Make the text take the full width */
+    padding-bottom: 0px; /* Adjust padding */
+  }
+}
+
+.card-container {
+  perspective: 1000px;
+}
+.card-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.7s;
+  position: relative;
+}
+.card-front,
+.card-back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.card-back {
+  transform: rotateY(180deg);
+}
+.card-flipped {
+  transform: rotateY(180deg);
+}
