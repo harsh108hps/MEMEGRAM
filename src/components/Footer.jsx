@@ -81,7 +81,7 @@ const Footer = () => {
                 <Twitter size={20} />
               </a>
               <a
-                href="https://www.youtube.com"
+                href="https://www.youtube.com/watch?v=axzdqO9ohrU"
                 target="_blank"
                 className="relative hover:text-pink-500"
               >
