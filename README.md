@@ -156,4 +156,6 @@ memegram/
 | Harsh Pratap Singh  | harshpratapsingh39900@gmail.com         | [LinkedIn](https://www.linkedin.com/)in/  (fsd25_05006/Masai Student Code/) |
 | Rabinarayan Sahoo   | rabinarayansahoo9658@gmail.com          | [LinkedIn](https://www.linkedin.com/in/)(fsd25_05040/Masai Student Code/)  |
 
-## 📸 Screenshots
+## 📸 Screenshots 
+#### 🧩 Home View
+![Home Screenshot](src/assets/images/Home.png)
