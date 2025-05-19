@@ -2,6 +2,9 @@
 
 ## 🌐 Live Demo Link
 https://memegram-neon.vercel.app/
+## For Testing purpose (login id)
+Email- harshsingh@gmail.com
+pass-123456
 
 ---
 
@@ -155,6 +158,8 @@ memegram/
 |---------------------|----------------------------------------|----------------------------------------|
 | Harsh Pratap Singh  | harshpratapsingh39900@gmail.com         | [LinkedIn](https://www.linkedin.com/)in/  (fsd25_05006/Masai Student Code/) |
 | Rabinarayan Sahoo   | rabinarayansahoo9658@gmail.com          | [LinkedIn](https://www.linkedin.com/in/)(fsd25_05040/Masai Student Code/)  |
+
+
 
 ## 📸 Screenshots 
 #### 🧩 Home View
